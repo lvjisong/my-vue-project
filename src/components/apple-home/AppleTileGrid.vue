@@ -20,10 +20,11 @@
           <a
             v-for="link in tile.links"
             :key="link.text"
-            href="#"
+            :href="link.url"
+            target="_blank"
+            rel="noopener noreferrer"
             class="apple-tile__btn"
             :class="link.type === 'primary' ? 'apple-tile__btn--primary' : 'apple-tile__btn--outline'"
-            @click.prevent
           >{{ link.text }}</a>
         </div>
       </div>

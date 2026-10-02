@@ -8,7 +8,7 @@
   <header class="apple-nav" :class="{ 'is-open': activeIndex > -1 && !isClosing, 'is-closing': isClosing }" @mouseleave="scheduleClose">
     <div class="apple-nav__inner">
       <!-- Apple Logo（官网 SVG） -->
-      <a class="apple-nav__logo" href="#" @click.prevent aria-label="Apple">
+      <a class="apple-nav__logo" href="https://www.apple.com.cn/" target="_blank" rel="noopener noreferrer" aria-label="Apple">
         <svg height="44" viewBox="0 0 14 44" width="14" aria-hidden="true">
           <path d="m13.0729 17.6825a3.61 3.61 0 0 0 -1.7248 3.0365 3.5132 3.5132 0 0 0 2.1379 3.2223 8.394 8.394 0 0 1 -1.0948 2.2618c-.6816.9812-1.3943 1.9623-2.4787 1.9623s-1.3633-.63-2.613-.63c-1.2187 0-1.6525.6507-2.644.6507s-1.6834-.9089-2.4787-2.0243a9.7842 9.7842 0 0 1 -1.6628-5.2776c0-3.0984 2.014-4.7405 3.9969-4.7405 1.0535 0 1.9314.6919 2.5924.6919.63 0 1.6112-.7333 2.8092-.7333a3.7579 3.7579 0 0 1 3.1604 1.5802zm-3.7284-2.8918a3.5615 3.5615 0 0 0 .8469-2.22 1.5353 1.5353 0 0 0 -.031-.32 3.5686 3.5686 0 0 0 -2.3445 1.2084 3.4629 3.4629 0 0 0 -.8779 2.1585 1.419 1.419 0 0 0 .031.2892 1.19 1.19 0 0 0 .2169.0207 3.0935 3.0935 0 0 0 2.1586-1.1368z"/>
         </svg>
@@ -21,12 +21,12 @@
           class="apple-nav__item"
           @mouseenter="openMenu(index)"
         >
-          <a class="apple-nav__link" href="#" @click.prevent>{{ item.label }}</a>
+          <a class="apple-nav__link" :href="topLink(item.label)" target="_blank" rel="noopener noreferrer">{{ item.label }}</a>
         </div>
       </nav>
 
       <div class="apple-nav__actions">
-        <a class="apple-nav__icon" href="#" @click.prevent aria-label="搜索">
+        <a class="apple-nav__icon" href="https://www.apple.com.cn/cn/search" target="_blank" rel="noopener noreferrer" aria-label="搜索">
           <svg height="44" viewBox="0 0 15 44" width="15" aria-hidden="true">
             <path d="M14.298,27.202l-3.87-3.87c0.701-0.929,1.122-2.081,1.122-3.332c0-3.06-2.489-5.55-5.55-5.55c-3.06,0-5.55,2.49-5.55,5.55 c0,3.061,2.49,5.55,5.55,5.55c1.251,0,2.403-0.421,3.332-1.122l3.87,3.87c0.151,0.151,0.35,0.228,0.548,0.228 s0.396-0.076,0.548-0.228C14.601,27.995,14.601,27.505,14.298,27.202z M1.55,20c0-2.454,1.997-4.45,4.45-4.45 c2.454,0,4.45,1.997,4.45,4.45S8.454,24.45,6,24.45C3.546,24.45,1.55,22.454,1.55,20z"/>
           </svg>
@@ -61,8 +61,9 @@
                 :key="link"
                 class="apple-nav__biglink"
                 :style="stagger(li, gi)"
-                href="#"
-                @click.prevent
+                :href="linkUrl(link)"
+                target="_blank"
+                rel="noopener noreferrer"
               >{{ link }}</a>
             </template>
             <!-- 第二三列：中号链接 -->
@@ -72,8 +73,9 @@
                 :key="link"
                 class="apple-nav__midlink"
                 :style="stagger(li, gi)"
-                href="#"
-                @click.prevent
+                :href="linkUrl(link)"
+                target="_blank"
+                rel="noopener noreferrer"
               >{{ link }}</a>
             </template>
             <a
@@ -81,8 +83,9 @@
               :key="'f-' + link"
               class="apple-nav__footlink"
               :style="stagger(col.links.length + fi, gi)"
-              href="#"
-              @click.prevent
+              :href="linkUrl(link)"
+              target="_blank"
+              rel="noopener noreferrer"
             >{{ link }}</a>
           </div>
         </div>
@@ -220,6 +223,164 @@ export default {
     },
   },
   methods: {
+    // 顶部导航标签 -> 官网地址（从 apple.com.cn 首页抓取）
+    topLink(label) {
+      const B = 'https://www.apple.com.cn'
+      const map = {
+        '商店': `${B}/cn/shop/goto/store`,
+        'Mac': `${B}/mac/`,
+        'iPad': `${B}/ipad/`,
+        'iPhone': `${B}/iphone/`,
+        'Watch': `${B}/watch/`,
+        'Vision': `${B}/apple-vision-pro/`,
+        'AirPods': `${B}/airpods/`,
+        '家居': `${B}/apple-home/`,
+        '娱乐': `${B}/entertainment/`,
+        '配件': `${B}/cn/shop/goto/buy_accessories`,
+        '技术支持': 'https://support.apple.com/zh-cn/',
+      }
+      return map[label] || `${B}/`
+    },
+    // 下拉链接文本 -> 官网 URL 映射（已逐字核对 apple.com.cn 实际 DOM）
+    linkUrl(text) {
+      const B = 'https://www.apple.com.cn'
+      const S = `${B}/cn/shop/goto`
+      const SU = 'https://support.apple.com/zh-cn'
+      const map = {
+        // ===== 商店下拉 =====
+        '选购最新产品': `${S}/store`,
+        'Mac': `${S}/buy_mac`,
+        'iPad': `${S}/buy_ipad`,
+        'iPhone': `${S}/buy_iphone`,
+        'Apple Watch': `${S}/buy_watch`,
+        'Apple Vision Pro': `${S}/buy_vision`,
+        'AirPods': `${S}/airpods/accessories`,
+        '配件': `${S}/buy_accessories`,
+        '查找零售店': `${B}/retail/`,
+        '订单状态': `${S}/order/list`,
+        'Apple Trade In 换购计划': `${S}/trade_in`,
+        '分期付款': `${S}/ww/financing`,
+        '个人设置辅导': `${S}/personal_setup`,
+        '认证的翻新产品': `${S}/special_deals`,
+        '教育': `${S}/educationrouting`,
+        '商务': `${B}/retail/business/`,
+        // ===== Mac =====
+        '探索全部 Mac 机型': `${B}/mac/`,
+        'MacBook Neo': `${B}/macbook-neo/`,
+        'MacBook Air': `${B}/macbook-air/`,
+        'MacBook Pro': `${B}/macbook-pro/`,
+        'iMac': `${B}/imac/`,
+        'Mac mini': `${B}/mac-mini/`,
+        'Mac Studio': `${B}/mac-studio/`,
+        '显示器': `${B}/displays/`,
+        'Mac 机型比较': `${B}/mac/compare/`,
+        '从 PC 换成 Mac': `${B}/mac/mac-does-that/`,
+        '选购 Mac': `${S}/buy_mac`,
+        'Mac 配件': `${S}/mac/accessories`,
+        'Mac 支持': `${SU}/mac`,
+        'AppleCare': `${B}/applecare/`,
+        'OS 27': `${B}/os/`,
+        'Apple 打造的 App': `${B}/apps/`,
+        'Apple 创作坊': `${B}/apple-creator-studio/`,
+        '配合 iPhone 更好用': `${B}/macos/continuity/`,
+        'iCloud+': `${B}/icloud/`,
+        'Mac 商务应用': `${B}/business/mac/`,
+        'Apple at Work': `${B}/business/`,
+        // ===== iPad =====
+        '探索全部 iPad 机型': `${B}/ipad/`,
+        'iPad Pro': `${B}/ipad-pro/`,
+        'iPad Air': `${B}/ipad-air/`,
+        'iPad': `${B}/ipad-11/`,
+        'iPad mini': `${B}/ipad-mini/`,
+        'Apple Pencil': `${B}/apple-pencil/`,
+        '键盘': `${B}/ipad-keyboards/`,
+        'iPad 机型比较': `${B}/ipad/compare/`,
+        '选购 iPad': `${S}/buy_ipad`,
+        'iPad 配件': `${S}/ipad/accessories`,
+        'iPad 支持': `${SU}/ipad`,
+        // ===== iPhone =====
+        '探索全部 iPhone 机型': `${B}/iphone/`,
+        'iPhone Duo': `${B}/iphone-duo/`,
+        'iPhone 18 Pro': `${B}/iphone-18-pro/`,
+        'iPhone Air': `${B}/iphone-air/`,
+        'iPhone 17': `${B}/iphone-17/`,
+        'iPhone 17e': `${B}/iphone-17e/`,
+        'iPhone 16': `${S}/buy_iphone/iphone_16`,
+        'iPhone 机型比较': `${B}/iphone/compare/`,
+        '换成 iPhone': `${B}/iphone/switch/`,
+        '选购 iPhone': `${S}/buy_iphone`,
+        'iPhone 配件': `${S}/iphone/accessories`,
+        'iPhone 支持': `${SU}/iphone`,
+        'iPhone 隐私保护': `${B}/privacy/`,
+        '配合 Mac 更好用': `${B}/macos/continuity/`,
+        'Apple Pay': `${B}/apple-pay/`,
+        'Siri': `${B}/siri/`,
+        // ===== Watch =====
+        '探索全部 Apple Watch 表款': `${B}/watch/`,
+        'Apple Watch Series 12': `${B}/apple-watch-series-12/`,
+        'Apple Watch Ultra 4': `${B}/apple-watch-ultra-4/`,
+        'Apple Watch SE 3': `${B}/apple-watch-se-3/`,
+        'Apple Watch Nike': `${B}/apple-watch-nike/`,
+        'Apple Watch Hermès': `${B}/apple-watch-hermes/`,
+        'Apple Watch 表款比较': `${B}/watch/compare/`,
+        'Apple Watch 哪里好': `${B}/watch/why-apple-watch/`,
+        '选购 Apple Watch': `${S}/buy_watch`,
+        'Apple Watch 表带': `${S}/watch/bands`,
+        'Apple Watch 配件': `${S}/watch/accessories`,
+        'Apple Watch 支持': `${SU}/watch`,
+        // ===== Vision =====
+        '探索 Apple Vision Pro': `${B}/apple-vision-pro/`,
+        '技术规格': `${B}/apple-vision-pro/specs/`,
+        '选购 Apple Vision Pro': `${S}/buy_vision`,
+        'Apple Vision Pro 配件': `${S}/vision/accessories`,
+        '预约演示试用': `${B}/retail/instore-shopping-session/session-selection/?topic=visionpro`,
+        'Apple Vision Pro 支持': `${SU}/apple-vision-pro`,
+        // ===== AirPods =====
+        '探索全部 AirPods 机型': `${B}/airpods/`,
+        'AirPods 5': `${B}/airpods-5/`,
+        'AirPods Pro 3': `${B}/airpods-pro/`,
+        'AirPods Max 2': `${B}/airpods-max/`,
+        'AirPods 机型比较': `${B}/airpods/compare/`,
+        '选购 AirPods 5': `${S}/buy_airpods/airpods_5`,
+        '选购 AirPods Pro 3': `${S}/buy_airpods/airpods_pro_3`,
+        '选购 AirPods Max 2': `${S}/buy_airpods/airpods_max_2`,
+        'AirPods 配件': `${S}/airpods/accessories`,
+        'AirPods 支持': `${SU}/airpods`,
+        'Apple Music': `${B}/apple-music/`,
+        // ===== 家居 =====
+        '探索家居项目': `${B}/apple-home/`,
+        'HomePod': `${B}/homepod-2nd-generation/`,
+        'HomePod mini': `${B}/homepod-mini/`,
+        '选购 HomePod': `${S}/buy_homepod/homepod`,
+        '选购 HomePod mini': `${S}/buy_homepod/homepod_mini`,
+        '家居配件': `${S}/accessories/homekit`,
+        'HomePod 支持': `${SU}/homepod`,
+        '家庭 App': `${B}/home-app/`,
+        '隔空播放': `${B}/airplay/`,
+        // ===== 娱乐 =====
+        '探索娱乐内容': `${B}/services/`,
+        'Apple 播客': `${B}/apple-podcasts/`,
+        'App Store': `${B}/app-store/`,
+        'Apple Music 支持': `${SU}/music`,
+        // ===== 配件 =====
+        '选购所有配件': `${S}/buy_accessories`,
+        '来自 Apple 的配件': `${S}/accessories/all_accessories/made_by_apple`,
+        'Beats': `${S}/accessories/all_accessories/beats_featured`,
+        'AirTag': `${B}/airtag/`,
+        // ===== 技术支持 =====
+        'Music': `${SU}/music`,
+        '探索各类技术支持': `${SU}/`,
+        '社区': 'https://discussionschinese.apple.com/welcome',
+        '查看保修服务': 'https://checkcoverage.apple.com/cn/zh',
+        'Genius Bar 天才吧': `${B}/retail/geniusbar/`,
+        '维修': `${SU}/repair`,
+        '获取 AppleCare': `${B}/applecare/`,
+        'Apple 账户和密码': `${SU}/apple-account`,
+        '账单和订阅': `${SU}/billing`,
+        '无障碍使用': `${SU}/accessibility`,
+      }
+      return map[text] || `${B}/`
+    },
     // 错峰延迟：第 li 项 * 20ms + 第 gi 组 * 80ms（官网公式）
     stagger(li, gi) {
       return { transitionDelay: `${li * 20 + (gi + 1) * 80}ms` };

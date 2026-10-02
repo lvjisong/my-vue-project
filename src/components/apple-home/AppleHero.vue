@@ -23,10 +23,10 @@
         <p v-if="subtitle" class="apple-hero__subtitle">{{ subtitle }}</p>
         <p v-for="(line, i) in infoLines" :key="i" class="apple-hero__info">{{ line }}</p>
         <div v-if="links.length" class="apple-hero__cta">
-          <a v-for="link in links" :key="link.text" href="#"
+          <a v-for="link in links" :key="link.text" :href="link.url" target="_blank" rel="noopener noreferrer"
             class="apple-hero__btn"
             :class="link.type === 'primary' ? 'apple-hero__btn--primary' : 'apple-hero__btn--outline'"
-            @click.prevent>{{ link.text }}</a>
+            >{{ link.text }}</a>
         </div>
       </template>
     </div>
@@ -36,10 +36,10 @@
       <p v-if="subtitle" class="apple-hero__subtitle">{{ subtitle }}</p>
       <p v-for="(line, i) in infoLines" :key="i" class="apple-hero__info">{{ line }}</p>
       <div v-if="links.length" class="apple-hero__cta">
-        <a v-for="link in links" :key="link.text" href="#"
+        <a v-for="link in links" :key="link.text" :href="link.url" target="_blank" rel="noopener noreferrer"
           class="apple-hero__btn"
           :class="link.type === 'primary' ? 'apple-hero__btn--primary' : 'apple-hero__btn--outline'"
-          @click.prevent>{{ link.text }}</a>
+          >{{ link.text }}</a>
       </div>
     </div>
   </section>
