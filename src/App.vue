@@ -1,25 +1,22 @@
 <template>
   <div id="app">
-    <!-- Apple 官网首页复刻（组件化，纯交互模拟） -->
-    <AppleHome />
+    <!-- 路由出口：首页 / 购物车 / 登录 -->
+    <router-view />
 
-    <!-- Apple 风格文件上传组件-->
+    <!-- Apple 风格文件上传组件（保留挂载，可按需打开） -->
     <!-- <apple-file-upload :uploadParams="uploadParams" /> -->
   </div>
 </template>
 
 <script>
-import AppleHome from './components/apple-home/AppleHome.vue'
 // import AppleFileUpload from './components/AppleFileUpload.vue'
 export default {
   name: 'App',
   components: {
-    AppleHome,
     // AppleFileUpload
   },
   data() {
     return {
-      // 文件上传配置：仅传入需要覆盖默认值的项即可，其余用组件默认值
       uploadParams: {
         multiple: true, // 是否多选
         fileTypes: '.jpg,.jpeg,.png,.gif', // 文件类型（空字符串表示不限）
@@ -34,10 +31,6 @@ export default {
       }
     }
   },
-  mounted() {
-    console.log('页面挂载完成')
-  },
-  methods: {}
 }
 </script>
 

@@ -1,0 +1,12 @@
+@use 'variables' as *;
+
+* { box-sizing: border-box; }
+html, body, #app { margin: 0; padding: 0; }
+body {
+  font-family: $font-stack;
+  color: $apple-text;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a { text-decoration: none; color: inherit; }
+ul, ol { list-style: none; padding: 0; margin: 0; }

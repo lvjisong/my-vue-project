@@ -92,15 +92,8 @@ export default {
 .apple-hero__subtitle { margin: 4px 0 0; font-size: 28px; font-weight: 400; line-height: 1.2; }
 .apple-hero__info { margin: 10px 0 0; font-size: 17px; line-height: 1.5; color: #6e6e73; }
 .apple-hero__cta { margin-top: 22px; display: flex; gap: 18px; justify-content: center; }
-.apple-hero__btn {
-  display: inline-flex; align-items: center; font-size: 17px; padding: 10px 22px; border-radius: 999px;
-  transition: transform 120ms ease-out, background-color 150ms ease-out;
-}
-.apple-hero__btn--primary { background: #0071e3; color: #fff; }
-.apple-hero__btn--primary:hover { background: #0077ed; }
-.apple-hero__btn--outline { border: 1px solid #0071e3; color: #0071e3; }
-.apple-hero__btn--outline:hover { background: #0071e3; color: #fff; }
-.apple-hero__btn:active { transform: scale(0.97); }
+.apple-hero__btn--primary { @include btn-primary; }
+.apple-hero__btn--outline { @include btn-outline; }
 
 /* 分栏布局：底部文字块 */
 .apple-hero__bottom { margin-top: auto; padding: 0 22px 56px; position: relative; z-index: 2; }
