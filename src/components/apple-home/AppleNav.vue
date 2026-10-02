@@ -5,6 +5,35 @@
       <div v-show="showPanel" class="apple-nav__curtain"></div>
     </transition>
 
+    <!-- 移动端全屏菜单（root 级，避免被 header 裁剪） -->
+    <transition name="mobile-fade">
+      <div v-show="mobileOpen" class="apple-nav__mobile" :class="{ 'is-closing': mobileClosing }">
+        <template v-if="mobileIndex === -1">
+          <button class="apple-nav__mobile-close" @click="closeMobile" aria-label="关闭">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><path d="M17.3 1.3L16 .01 9 7.01 2 .01.7 1.3 7.7 8.3.7 15.3l1.3 1.3L9 9.6l7 7 1.3-1.3-7-7z"/></svg>
+          </button>
+          <nav class="apple-nav__mobile-list">
+            <a v-for="(item, index) in menus" :key="item.label" class="apple-nav__mobile-top" @click="mobileIndex = index">{{ item.label }}</a>
+          </nav>
+        </template>
+        <template v-else>
+          <button class="apple-nav__mobile-back" @click="mobileIndex = -1" aria-label="返回">
+            <svg width="12" height="20" viewBox="0 0 12 20" fill="currentColor"><path d="M10.3 18.7L2 10l8.3-8.7-1.4-1.4L-.7 10l12 10.1z"/></svg>
+          </button>
+          <button class="apple-nav__mobile-close" @click="closeMobile" aria-label="关闭">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><path d="M17.3 1.3L16 .01 9 7.01 2 .01.7 1.3 7.7 8.3.7 15.3l1.3 1.3L9 9.6l7 7 1.3-1.3-7-7z"/></svg>
+          </button>
+          <nav class="apple-nav__mobile-sub">
+            <template v-for="(col, ci) in menus[mobileIndex].columns">
+              <p v-if="ci === 0" class="apple-nav__mobile-heading">{{ col.heading }}</p>
+              <a v-for="l in col.links" :key="l" :href="topLink(l)" target="_blank" rel="noopener noreferrer" @click="mobileOpen = false">{{ l }}</a>
+              <p v-if="ci > 0" class="apple-nav__mobile-heading">{{ col.heading }}</p>
+            </template>
+          </nav>
+        </template>
+      </div>
+    </transition>
+
   <header class="apple-nav" :class="{ 'is-open': activeIndex > -1 && !isClosing, 'is-closing': isClosing }" @mouseleave="scheduleClose">
     <div class="apple-nav__inner">
       <!-- Apple Logo（官网 SVG） -->
@@ -36,6 +65,9 @@
             <path d="m11.3535 16.0283h-1.0205a3.4229 3.4229 0 0 0 -3.333-2.9648 3.4229 3.4229 0 0 0 -3.333 2.9648h-1.02a2.1184 2.1184 0 0 0 -2.117 2.1162v7.7155a2.1186 2.1186 0 0 0 2.1162 2.1167h8.707a2.1186 2.1186 0 0 0 2.1168-2.1167v-7.7155a2.1184 2.1184 0 0 0 -2.1165-2.1162zm-4.3535-1.8652a2.3169 2.3169 0 0 1 2.2222 1.8652h-4.4444a2.3169 2.3169 0 0 1 2.2222-1.8652zm5.37 11.6969a1.0182 1.0182 0 0 1 -1.0166 1.0171h-8.7069a1.0182 1.0182 0 0 1 -1.0165-1.0171v-7.7155a1.0178 1.0178 0 0 1 1.0166-1.0166h8.707a1.0178 1.0178 0 0 1 1.0164 1.0166z"/>
           </svg>
         </router-link>
+        <button class="apple-nav__hamburger" @click="mobileOpen = !mobileOpen" aria-label="菜单">
+          <span></span><span></span>
+        </button>
       </div>
     </div>
 
@@ -108,6 +140,9 @@ export default {
     return {
       activeIndex: -1,
       showPanel: false,
+      mobileOpen: false,
+      mobileIndex: -1,
+      mobileClosing: false,
       isClosing: false,
       closeTimer: null,
       menus: [
@@ -223,6 +258,13 @@ export default {
     },
   },
   methods: {
+    closeMobile() {
+      this.mobileClosing = true
+      this.$nextTick(() => {
+        setTimeout(() => { this.mobileOpen = false }, 20)
+      })
+      setTimeout(() => { this.mobileClosing = false; this.mobileIndex = -1 }, 400)
+    },
     // 顶部导航标签 -> 官网地址（从 apple.com.cn 首页抓取）
     topLink(label) {
       const B = 'https://www.apple.com.cn'
@@ -528,4 +570,43 @@ export default {
 /* 幕布淡入 */
 .curtain-enter-active, .curtain-leave-active { transition: opacity 0.32s ease; }
 .curtain-enter, .curtain-leave-to { opacity: 0; }
+
+/* 移动端 */
+.apple-nav__hamburger { display: none; background: none; border: 0; padding: 0; cursor: pointer; }
+.apple-nav__hamburger span { display: block; width: 16px; height: 1px; background: #f5f5f7; margin: 4px 0; }
+.apple-nav__mobile { display: none; }
+
+@media (max-width: 734px) {
+  .apple-nav__menu { display: none; }
+  .apple-nav__inner { max-width: none; padding: 0 22px; justify-content: space-between; }
+  .apple-nav__actions { gap: 28px; margin-left: auto; }
+  .apple-nav__hamburger { display: block; }
+  .apple-nav__mobile {
+    display: block; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: #1d1d1f; z-index: 3000; padding: 0 36px 40px; overflow-y: auto;
+  }
+  .apple-nav__mobile-close { background: none; border: 0; color: #f5f5f7; position: absolute; top: 14px; right: 22px; cursor: pointer; padding: 8px; z-index: 2; }
+  .apple-nav__mobile-back { background: none; border: 0; color: #f5f5f7; position: absolute; top: 16px; left: 22px; cursor: pointer; padding: 8px; z-index: 2; }
+  .apple-nav__mobile-list { padding-top: 60px; }
+  .apple-nav__mobile-top {
+    color: #f5f5f7; font-size: 26px; font-weight: 600; padding: 12px 0;
+    display: block; cursor: pointer; text-decoration: none; line-height: 1.15;
+  }
+  .apple-nav__mobile-sub { padding-top: 60px; }
+  .apple-nav__mobile-heading { color: #86868b; font-size: 17px; margin: 20px 0 6px; font-weight: 400; }
+  .apple-nav__mobile-sub a {
+    display: block; color: #f5f5f7; font-size: 21px; font-weight: 600;
+    padding: 6px 0; text-decoration: none;
+  }
+  .apple-nav__icon{margin-left: 0;}
+}
+.mobile-fade-enter-active, .mobile-fade-leave-active {
+  transition: transform 0.38s cubic-bezier(0.4, 0, 0.6, 1);
+  transform-origin: top;
+}
+.mobile-fade-enter, .mobile-fade-leave-to { transform: scaleY(0); }
+.apple-nav__mobile.is-closing .apple-nav__mobile-list,
+.apple-nav__mobile.is-closing .apple-nav__mobile-sub,
+.apple-nav__mobile.is-closing .apple-nav__mobile-close,
+.apple-nav__mobile.is-closing .apple-nav__mobile-back { visibility: hidden; }
 </style>

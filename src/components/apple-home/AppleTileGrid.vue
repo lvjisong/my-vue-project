@@ -8,6 +8,7 @@
       :style="{ backgroundColor: tile.background }"
     >
       <div v-if="tile.image" class="apple-tile__bg" :style="{ backgroundImage: `url(${tile.image})` }"></div>
+      <div v-if="tile.imageMobile" class="apple-tile__bg apple-tile__bg--mobile" :style="{ backgroundImage: `url(${tile.imageMobile})` }"></div>
       <div class="apple-tile__text">
         <h3 class="apple-tile__title">
           <svg v-if="tile.showLogo" class="apple-tile__logo" viewBox="0 0 14 44" height="44" aria-hidden="true">
@@ -60,7 +61,7 @@ export default {
 .apple-tile__text { padding: 56px 20px 0; position: relative; z-index: 2; }
 .apple-tile__title {
   margin: 0; font-size: 32px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.1;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;height: 40px;
 }
 .apple-tile__logo { height: 72px; width: auto; fill: currentColor; }
 .apple-tile__accent { font-style: italic; color: #0071e3; font-weight: 400; }
@@ -74,5 +75,14 @@ export default {
 .apple-tile__btn--outline { border: 1px solid #0071e3; color: #0071e3; }
 .apple-tile__btn--outline:hover { background: #0071e3; color: #fff; }
 .apple-tile__btn:active { transform: scale(0.97); }
-@media (max-width: 734px) { .apple-tiles { grid-template-columns: 1fr; } }
+@media (max-width: 734px) {
+  .apple-tiles { grid-template-columns: 1fr; padding: 0; gap: 12px; background: #fff; }
+  .apple-tile { min-height: 500px; }
+  .apple-tile__bg { display: none; }
+  .apple-tile__bg--mobile { display: block; background-size: auto 100%; background-position: center bottom; }
+  .apple-tile__text { padding: 24px 22px 0; }
+  .apple-tile__title { font-size: 24px; }
+  .apple-tile__subtitle { font-size: 15px; }
+  .apple-tile__cta { margin-top: 12px; }
+}
 </style>

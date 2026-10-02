@@ -9,6 +9,9 @@
     :style="{ backgroundColor: fallbackBg }"
   >
     <div v-if="image" ref="bg" class="apple-hero__bg" :style="{ backgroundImage: `url(${image})` }"></div>
+    <div v-if="imageMobile" class="apple-hero__image-wrapper">
+      <img :src="imageMobile" alt="" />
+    </div>
 
     <!-- 顶部标题 -->
     <div ref="top" class="apple-hero__top">
@@ -55,6 +58,7 @@ export default {
     links: { type: Array, default: () => [] },
     theme: { type: String, default: 'light' },
     image: { type: String, default: '' },
+    imageMobile: { type: String, default: '' },
     fallbackBg: { type: String, default: '#fbfbfd' },
     showLogo: { type: Boolean, default: false },
     contentPosition: { type: String, default: 'top' }, // top | bottom
@@ -79,7 +83,7 @@ export default {
 .apple-hero--light { color: #1d1d1f; background: #f5f5f7; }
 .apple-hero--dark { color: #f5f5f7; }
 .apple-hero__bg {
-  position: absolute; left: 0; right: 0; top: -10%; bottom: -10%;
+  position: absolute; left: 0; right: 0; bottom: 0; top: 0;
   background-position: center bottom; background-repeat: no-repeat; background-size: cover;
   will-change: transform; z-index: 0;
 }
@@ -99,9 +103,29 @@ export default {
 .apple-hero__bottom { margin-top: auto; padding: 0 22px 56px; position: relative; z-index: 2; }
 .apple-hero--split .apple-hero__subtitle { margin: 0 0 18px; font-size: 21px; }
 
+.apple-hero__image-wrapper { display: none; }
+
 @media (max-width: 734px) {
-  .apple-hero { min-height: 540px; }
-  .apple-hero__title { font-size: 40px; }
-  .apple-hero__subtitle { font-size: 24px; }
+  .apple-hero { height: 500px; min-height: 0; padding: 39px 0 43px; box-sizing: border-box; margin-bottom: 12px; }
+  .apple-hero__bg { display: none; }
+  .apple-hero__image-wrapper {
+    display: block;
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 500px; width: 100%; z-index: 0;
+  }
+  .apple-hero__image-wrapper img {
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: auto; height: 90%;
+  }
+  .apple-hero__top { padding: 0 22px; position: relative; z-index: 2; }
+  .apple-hero__title { font-size: 28px; }
+  .apple-hero--split .apple-hero__top { padding-top: 0; margin-top: -15px; }
+  .apple-hero--split .apple-hero__title { font-size: 21px; }
+  .apple-hero__subtitle { font-size: 17px; margin-top: 6px; }
+  .apple-hero__subtitle.apple-hero__subtitle--large { font-size: 15px; }
+  .apple-hero__info { font-size: 13px; }
+  .apple-hero__cta { margin-top: 11px; gap: 14px; }
+  .apple-hero__bottom { padding-bottom: 0px; }
+  .apple-hero__bottom .apple-hero__subtitle { font-size: 19px; max-width: 320px; margin: 0 auto; }
 }
 </style>
