@@ -1,21 +1,19 @@
 /**
  * ============================================================
- * store/index.js —— Vuex 全局状态
+ * store/index.js —— Vuex 全局状态（Vuex 4 写法）
  * ------------------------------------------------------------
+ * Vue 3 用 createStore() 创建 store 实例，替代 Vue 2 的 new Vuex.Store()。
  * 当前只有 auth 模块（user/token）。后续加购物车、主题等再拆 modules。
  * ============================================================
  */
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from "vuex";
 // axios：当前 fetchUser/logout 还是 mock 实现，没真正发请求。
 // 这行 import 故意留着（eslint-disable 压 unused 警告），接后端后直接在
 // actions 里 await axios.get('/api/user/me') 即可，不用再补 import。
 // eslint-disable-next-line no-unused-vars
 import axios from "axios";
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
+export default createStore({
   state: {
     /** 当前登录用户，未登录为 null */
     user: null,

@@ -93,9 +93,9 @@ module.exports = defineConfig({
             test: /[\\/]node_modules[\\/]/,
             priority: 10,
           },
-          elementUI: {
-            name: "chunk-element-ui",
-            test: /[\\/]node_modules[\\/](element-ui)[\\/]/,
+          elementPlus: {
+            name: "chunk-element-plus",
+            test: /[\\/]node_modules[\\/](element-plus)[\\/]/,
             priority: 20,
           },
         },

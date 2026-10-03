@@ -333,12 +333,12 @@ export default {
      *   - 模板里用 v-show="open[key]" 控制对应 ul 的显示
      *   - 每次点击把该 key 的值取反：true→false（收起），undefined→true（展开）
      *
-     * 为什么用 this.$set：
-     *   Vue 2 无法检测对象新增属性，直接 this.open[key] = xxx 视图不更新；
-     *   this.$set 会新增响应式属性并触发重渲染。
+     * Vue 3 响应式：
+     *   Vue 3 用 Proxy 实现响应式，对象新增属性自动追踪，直接赋值即可，
+     *   不需要 Vue 2 的 this.$set。
      */
     toggle(key) {
-      this.$set(this.open, key, !this.open[key]);
+      this.open[key] = !this.open[key];
     },
   },
 };

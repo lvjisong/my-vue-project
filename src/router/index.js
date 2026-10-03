@@ -1,7 +1,9 @@
 /**
  * ============================================================
- * 路由配置 + 全局守卫
+ * 路由配置 + 全局守卫（Vue Router 4 写法）
  * ------------------------------------------------------------
+ * Vue 3 用 createRouter() + createWebHistory() 替代 new VueRouter()。
+ *
  * 新增页面流程：
  *   1. 在 src/views/ 新建 Xxx.vue
  *   2. 在下面 routes 数组里加一条，懒加载写法：component: () => import('@/views/Xxx.vue')
@@ -10,11 +12,8 @@
  * 登录态：统一走 @/utils/auth.js，不要在组件里直接读 localStorage
  * ============================================================
  */
-import Vue from "vue";
-import VueRouter from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import auth from "@/utils/auth";
-
-Vue.use(VueRouter);
 
 const routes = [
   {
@@ -37,17 +36,17 @@ const routes = [
     component: () => import("@/views/Login.vue"),
     meta: { title: "登录", requireAuth: false },
   },
-  // 404 兜底
+  // 404 兜底（Vue Router 4 通配符写法：/:pathMatch(.*)*）
   {
-    path: "*",
+    path: "/:pathMatch(.*)*",
     component: () => import("@/views/NotFound.vue"),
     meta: { title: "页面未找到" },
   },
 ];
 
-const router = new VueRouter({
-  mode: "history", // 干净的 URL，无 #；需要 Nginx try_files 配合（见 deploy/nginx.conf.example）
-  base: process.env.BASE_URL,
+const router = createRouter({
+  // createWebHistory 替代 mode: 'history'，需要 Nginx try_files 配合
+  history: createWebHistory(process.env.BASE_URL),
   routes,
   scrollBehavior(to, from, savedPosition) {
     // 切换路由后回到顶部；浏览器前进后退时保留原滚动位置

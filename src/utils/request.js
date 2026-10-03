@@ -1,5 +1,6 @@
 import axios from "axios";
-import { Message } from "element-ui";
+// Element Plus 消息提示（Vue 3 版，替代 element-ui）
+import { ElMessage as Message } from "element-plus";
 import auth from "@/utils/auth";
 
 /**
