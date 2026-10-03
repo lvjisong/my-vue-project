@@ -9,6 +9,7 @@ npm install
 npm run serve        # 开发 http://localhost:8080
 npm run build        # 生产打包
 npm run build:report # 打包体积分析
+npm run format       # Prettier 格式化 src 下所有 vue/js/scss/css
 ```
 
 ## 目录结构
