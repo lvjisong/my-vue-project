@@ -76,7 +76,7 @@
       <hr class="apple-footer__divider apple-footer__divider--legal" />
 
       <div class="apple-footer__legal">
-        <p>Copyright © 2026 Apple Inc. 保留所有权利。</p>
+        <p>Copyright © {{ currentYear }} Apple Inc. 保留所有权利。</p>
         <nav class="apple-footer__legalnav">
           <a
             v-for="l in legalLinks"
@@ -109,30 +109,43 @@
  * 主题：颜色全部走 theme.scss 的 CSS 变量（--bg-page / --text-secondary 等），跟随系统深浅色
  */
 // 官网外链常量统一从 @/constants/urls 引入
-import { APPLE, SHOP, RETAIL, APPLE_ACCOUNT, ICLOUD, APP_STORE_APP } from "@/constants/urls";
+import {
+  APPLE,
+  SHOP,
+  RETAIL,
+  APPLE_ACCOUNT,
+  ICLOUD,
+  APP_STORE_APP,
+  PRODUCT,
+  LEGAL,
+  ABOUT,
+} from "@/constants/urls";
 
 export default {
   name: "AppleFooter",
   data() {
-    // 局部变量，方便下面数组里拼接 URL
-    const B = APPLE;
     return {
       open: {},
+      // 当前年份（Copyright 用，自动更新，不用手动改）
+      currentYear: new Date().getFullYear(),
       // 暴露给模板用的外链常量
       APPLE,
       RETAIL,
+      PRODUCT,
+      LEGAL,
+      ABOUT,
       legalLinks: [
-        { text: "隐私政策", url: `${B}/legal/privacy/` },
+        { text: "隐私政策", url: LEGAL.privacy },
         {
           text: "使用条款",
-          url: `${B}/legal/internet-services/terms/site.html`,
+          url: LEGAL.terms,
         },
         {
           text: "销售政策",
           url: SHOP.salesRefunds,
         },
-        { text: "法律信息", url: `${B}/legal/` },
-        { text: "网站地图", url: `${B}/sitemap/` },
+        { text: "法律信息", url: LEGAL.main },
+        { text: "网站地图", url: LEGAL.sitemap },
       ],
       columns: [
         [
@@ -143,17 +156,17 @@ export default {
                 text: "商店",
                 url: SHOP.store,
               },
-              { text: "Mac", url: `${B}/mac/` },
-              { text: "iPad", url: `${B}/ipad/` },
-              { text: "iPhone", url: `${B}/iphone/` },
-              { text: "Watch", url: `${B}/watch/` },
+              { text: "Mac", url: PRODUCT.mac },
+              { text: "iPad", url: PRODUCT.ipad },
+              { text: "iPhone", url: PRODUCT.iphone },
+              { text: "Watch", url: PRODUCT.watch },
               {
                 text: "Vision",
-                url: `${B}/apple-vision-pro/`,
+                url: PRODUCT.vision,
               },
-              { text: "AirPods", url: `${B}/airpods/` },
-              { text: "家居", url: `${B}/apple-home/` },
-              { text: "AirTag", url: `${B}/airtag/` },
+              { text: "AirPods", url: PRODUCT.airpods },
+              { text: "家居", url: PRODUCT.home },
+              { text: "AirTag", url: PRODUCT.airtag },
               {
                 text: "配件",
                 url: SHOP.buyAccessories,
@@ -167,10 +180,10 @@ export default {
           {
             heading: "Apple 钱包",
             links: [
-              { text: "Apple Pay", url: `${B}/apple-pay/` },
+              { text: "Apple Pay", url: PRODUCT.applePay },
               {
                 text: "Apple Pay 公交",
-                url: `${B}/apple-pay/transit/`,
+                url: PRODUCT.applePayTransit,
               },
             ],
           },
@@ -195,13 +208,13 @@ export default {
             links: [
               {
                 text: "Apple Music",
-                url: `${B}/apple-music/`,
+                url: PRODUCT.music,
               },
               {
                 text: "Apple 播客",
-                url: `${B}/apple-podcasts/`,
+                url: PRODUCT.podcasts,
               },
-              { text: "App Store", url: `${B}/app-store/` },
+              { text: "App Store", url: PRODUCT.appStore },
             ],
           },
         ],
@@ -259,7 +272,7 @@ export default {
             links: [
               {
                 text: "Apple 与商务",
-                url: `${B}/business/`,
+                url: ABOUT.business,
               },
               {
                 text: "商务选购",
@@ -272,7 +285,7 @@ export default {
             links: [
               {
                 text: "Apple 与教育",
-                url: `${B}/education/`,
+                url: ABOUT.education,
               },
               {
                 text: "高校师生选购",
@@ -287,42 +300,42 @@ export default {
             links: [
               {
                 text: "无障碍使用",
-                url: `${B}/accessibility/`,
+                url: ABOUT.accessibility,
               },
               {
                 text: "教育",
-                url: `${B}/education-initiative/`,
+                url: ABOUT.educationInitiative,
               },
               {
                 text: "环境责任",
-                url: `${B}/environment/`,
+                url: ABOUT.environment,
               },
-              { text: "隐私", url: `${B}/privacy/` },
+              { text: "隐私", url: LEGAL.privacyMain },
               {
                 text: "供应链创新",
-                url: `${B}/supply-chain/`,
+                url: ABOUT.supplyChain,
               },
             ],
           },
           {
             heading: "关于 Apple",
             links: [
-              { text: "Newsroom", url: `${B}/newsroom/` },
+              { text: "Newsroom", url: ABOUT.newsroom },
               {
                 text: "Apple 管理层",
-                url: `${B}/leadership/`,
+                url: ABOUT.leadership,
               },
-              { text: "工作机会", url: `${B}/jobs/` },
+              { text: "工作机会", url: ABOUT.jobs },
               {
                 text: "创造就业",
-                url: `${B}/job-creation/`,
+                url: ABOUT.jobCreation,
               },
               {
                 text: "商业道德与合规",
-                url: `${B}/compliance/`,
+                url: ABOUT.compliance,
               },
-              { text: "活动", url: `${B}/apple-events/` },
-              { text: "联系 Apple", url: `${B}/contact/` },
+              { text: "活动", url: ABOUT.events },
+              { text: "联系 Apple", url: ABOUT.contact },
             ],
           },
         ],

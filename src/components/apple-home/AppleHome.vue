@@ -39,10 +39,8 @@ import AppleNav from "./AppleNav.vue";
 import AppleHero from "./AppleHero.vue";
 import AppleTileGrid from "./AppleTileGrid.vue";
 import AppleFooter from "./AppleFooter.vue";
-import { APPLE, ICLOUD_OFFER } from "@/constants/urls";
+import { ICLOUD_OFFER, HOME_LINKS, SHOP } from "@/constants/urls";
 
-/** 官网 CDN 前缀（仅用于外链按钮跳转，不再用于图片） */
-const CDN = APPLE;
 /** 图片本地前缀（public/images/，由 .env 配置） */
 const IMG = process.env.VUE_APP_IMAGE_BASE || "/images";
 
@@ -69,12 +67,12 @@ export default {
             {
               text: "进一步了解",
               type: "primary",
-              url: `${CDN}/iphone-18-pro/`,
+              url: HOME_LINKS.iphone18Pro.learn,
             },
             {
               text: "购买",
               type: "outline",
-              url: `${CDN}/cn/shop/goto/buy_iphone/iphone_18_pro`,
+              url: HOME_LINKS.iphone18Pro.buy,
             },
           ],
         },
@@ -89,11 +87,11 @@ export default {
           parallax: 0.12,
           infoLines: ["10 月 16 日晚 8 点接受预购", "10 月 23 日发售"],
           links: [
-            { text: "进一步了解", type: "primary", url: `${CDN}/iphone-duo/` },
+            { text: "进一步了解", type: "primary", url: HOME_LINKS.iphoneDuo.learn },
             {
               text: "查看价格",
               type: "outline",
-              url: `${CDN}/cn/shop/goto/buy_iphone/iphone_duo`,
+              url: HOME_LINKS.iphoneDuo.buy,
             },
           ],
         },
@@ -111,12 +109,12 @@ export default {
             {
               text: "进一步了解",
               type: "primary",
-              url: `${CDN}/apple-watch-series-12/`,
+              url: HOME_LINKS.watchSeries12.learn,
             },
             {
               text: "购买",
               type: "outline",
-              url: `${CDN}/cn/shop/goto/buy_watch/apple_watch_series_12`,
+              url: HOME_LINKS.watchSeries12.buy,
             },
           ],
         },
@@ -146,12 +144,12 @@ export default {
             {
               text: "进一步了解",
               type: "primary",
-              url: `${CDN}/apple-watch-ultra-4/`,
+              url: HOME_LINKS.watchUltra4.learn,
             },
             {
               text: "购买",
               type: "outline",
-              url: `${CDN}/cn/shop/goto/buy_watch/apple_watch_ultra_4`,
+              url: HOME_LINKS.watchUltra4.buy,
             },
           ],
         },
@@ -178,11 +176,11 @@ export default {
           image: `${IMG}/promos/mac-mini_large_2x.jpg`,
           imageMobile: `${IMG}/promos/mac-mini_small_2x.jpg`,
           links: [
-            { text: "进一步了解", type: "primary", url: `${CDN}/mac-mini/` },
+            { text: "进一步了解", type: "primary", url: HOME_LINKS.macMini.learn },
             {
               text: "购买",
               type: "outline",
-              url: `${CDN}/cn/shop/goto/buy_mac/mac_mini`,
+              url: HOME_LINKS.macMini.buy,
             },
           ],
         },
@@ -194,11 +192,11 @@ export default {
           image: `${IMG}/promos/macbook-air_large_2x.jpg`,
           imageMobile: `${IMG}/promos/macbook-air_small_2x.jpg`,
           links: [
-            { text: "进一步了解", type: "primary", url: `${CDN}/macbook-air/` },
+            { text: "进一步了解", type: "primary", url: HOME_LINKS.macbookAir.learn },
             {
               text: "购买",
               type: "outline",
-              url: `${CDN}/cn/shop/goto/buy_mac/macbook_air`,
+              url: HOME_LINKS.macbookAir.buy,
             },
           ],
         },
@@ -211,11 +209,11 @@ export default {
           image: `${IMG}/promos/ipad-air_large_2x.jpg`,
           imageMobile: `${IMG}/promos/ipad-air_small_2x.jpg`,
           links: [
-            { text: "进一步了解", type: "primary", url: `${CDN}/ipad-air/` },
+            { text: "进一步了解", type: "primary", url: HOME_LINKS.ipadAir.learn },
             {
               text: "购买",
               type: "outline",
-              url: `${CDN}/cn/shop/goto/buy_ipad/ipad_air`,
+              url: HOME_LINKS.ipadAir.buy,
             },
           ],
         },
@@ -231,7 +229,7 @@ export default {
             {
               text: "获取折抵估价",
               type: "primary",
-              url: `${CDN}/cn/shop/goto/trade_in`,
+              url: SHOP.tradeIn,
             },
           ],
         },
