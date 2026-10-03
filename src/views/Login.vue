@@ -7,13 +7,13 @@
 </template>
 
 <script>
-import auth from '@/utils/auth'
+import auth from "@/utils/auth";
 export default {
-  name: 'Login',
+  name: "Login",
   methods: {
     fakeLogin() {
       // TODO-AUTH-LOGIN: 接后端前现在这样：假 token，写个随机数
-      auth.setToken('demo-token-' + Date.now()) 
+      auth.setToken("demo-token-" + Date.now());
       // TODO-AUTH-LOGIN: 接后端后把下面1、2注释打开,把上面的代码注释掉：
       // 1. 调后端登录接口
       // const { data } = await post('/auth/login', {
@@ -22,13 +22,13 @@ export default {
       // })
       // 2. 把后端返回的 token 存起来
       //   auth.setToken(data.token, data.user)
-      //   auth.setRefreshToken(data.refresh_token)      
+      //   auth.setRefreshToken(data.refresh_token)
       // 3. 跳回原页面
-      const redirect = this.$route.query.redirect || '/'
-      this.$router.replace(redirect)
-    }
-  }
-}
+      const redirect = this.$route.query.redirect || "/";
+      this.$router.replace(redirect);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -37,7 +37,13 @@ export default {
   max-width: 480px;
   margin: 0 auto;
   text-align: center;
-  h1 { font-size: 40px; margin-bottom: 16px; }
-  .btn { @include btn-primary; margin-top: 16px; }
+  h1 {
+    font-size: 40px;
+    margin-bottom: 16px;
+  }
+  .btn {
+    @include btn-primary;
+    margin-top: 16px;
+  }
 }
 </style>

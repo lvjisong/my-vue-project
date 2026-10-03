@@ -1,6 +1,6 @@
-import axios from 'axios'
-import { Message } from 'element-ui'
-import auth from '@/utils/auth'
+import axios from "axios";
+import { Message } from "element-ui";
+import auth from "@/utils/auth";
 
 /**
  * request —— 项目统一的 axios 封装（生产可用）
@@ -29,31 +29,31 @@ import auth from '@/utils/auth'
 // 统一走 @/utils/auth.js（Cookie + Vuex），不要在本文件直接读写
 /** 读取访问 token */
 function getToken() {
-  return auth.getToken() || ''
+  return auth.getToken() || "";
 }
 
 /** 读取刷新 token（走 auth.js；后端不支持时 auth.getRefreshToken 返回空串） */
 function getRefreshToken() {
-  return auth.getRefreshToken() || ''
+  return auth.getRefreshToken() || "";
 }
 
 /** 写入新 token（登录成功时由 auth.setToken 处理） */
 function setTokens(accessToken, refreshToken) {
-  auth.setToken(accessToken)
+  auth.setToken(accessToken);
 }
 
 /** 清除全部 token（登出/续期失败时调用） */
 function clearTokens() {
-  auth.logout()
+  auth.logout();
 }
 
 // ==================== 自动刷新 token 配置 ====================
 // 刷新 token 的接口地址（按项目实际调整）
-const REFRESH_URL = '/auth/refresh'
+const REFRESH_URL = "/auth/refresh";
 // 是否正在刷新：标志位防止并发 401 触发多次刷新（单飞去重）
-let isRefreshing = false
+let isRefreshing = false;
 // 刷新期间到达的 401 请求排队，等拿到新 token 后统一重试
-let waitQueue = []
+let waitQueue = [];
 
 /**
  * 跳转登录页。
@@ -62,8 +62,8 @@ let waitQueue = []
  */
 function redirectToLogin() {
   // 避免在登录页上重复跳转造成死循环
-  if (window.location && !window.location.pathname.includes('/login')) {
-    window.location.href = '/login'
+  if (window.location && !window.location.pathname.includes("/login")) {
+    window.location.href = "/login";
   }
 }
 
@@ -75,82 +75,87 @@ function redirectToLogin() {
  * @returns {Promise<string>} 新 access token
  */
 async function requestNewToken() {
-  const res = await axios.post(REFRESH_URL, { refresh_token: getRefreshToken() })
-  const data = res && res.data
-  const payload = data && data.data
+  const res = await axios.post(REFRESH_URL, {
+    refresh_token: getRefreshToken(),
+  });
+  const data = res && res.data;
+  const payload = data && data.data;
   if (!payload || !payload.token) {
-    throw new Error('刷新 token 响应结构异常')
+    throw new Error("刷新 token 响应结构异常");
   }
-  setTokens(payload.token, payload.refresh_token || getRefreshToken())
-  return payload.token
+  setTokens(payload.token, payload.refresh_token || getRefreshToken());
+  return payload.token;
 }
 
 /** 业务成功码：0 或 200 均视为成功（可按后端约定扩展） */
 function isBizOk(code) {
-  return code === 0 || code === 200
+  return code === 0 || code === 200;
 }
 
 /** 从后端响应中提取可读错误信息 */
 function getBizMsg(res) {
-  return (res && (res.msg || res.message)) || '业务处理失败'
+  return (res && (res.msg || res.message)) || "业务处理失败";
 }
 
 // ==================== 实例创建 ====================
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API || '', // 空串时用相对路径或调用方传入的完整 url
+  baseURL: process.env.VUE_APP_BASE_API || "", // 空串时用相对路径或调用方传入的完整 url
   timeout: 120000, // 默认 120s，可在单次请求用 config.timeout 覆盖
-})
+});
 
 // ==================== 请求拦截器 ====================
 service.interceptors.request.use(
   (config) => {
     // 注入 token：有 token 才加，避免未登录时发出带空头请求
-    const token = getToken()
+    const token = getToken();
     if (token) {
-      config.headers.Authorization = 'Bearer ' + token
+      config.headers.Authorization = "Bearer " + token;
     }
     // FormData 上传：Content-Type 必须由浏览器自动携带 multipart boundary，
     // 若沿用 axios 默认的 application/json 会导致上传失败，这里显式移除
     if (config.data instanceof FormData) {
-      delete config.headers['Content-Type']
+      delete config.headers["Content-Type"];
     }
-    return config
+    return config;
   },
   (error) => Promise.reject(error) // 请求配置阶段错误，直接透传
-)
+);
 
 // ==================== 响应拦截器 ====================
 service.interceptors.response.use(
   // ---------- 成功分支：解包业务数据 ----------
   (response) => {
-    const config = response.config || {}
-    const res = response.data
+    const config = response.config || {};
+    const res = response.data;
 
     // 二进制流（文件下载等）不按业务结构解析，原样返回
-    if (config.responseType === 'blob' || config.responseType === 'arraybuffer') {
-      return res
+    if (
+      config.responseType === "blob" ||
+      config.responseType === "arraybuffer"
+    ) {
+      return res;
     }
 
     // 约定业务结构 { code, data, msg }
-    if (res && typeof res === 'object' && 'code' in res) {
+    if (res && typeof res === "object" && "code" in res) {
       if (!isBizOk(res.code)) {
         // 业务失败：提取 msg，默认弹错提示；silentError 时静默
-        const bizMsg = getBizMsg(res)
+        const bizMsg = getBizMsg(res);
         if (!config.silentError) {
-          Message.error(bizMsg)
+          Message.error(bizMsg);
         }
-        return Promise.reject(new Error(bizMsg))
+        return Promise.reject(new Error(bizMsg));
       }
       // 成功：返回业务 data（无 data 时原样返回）
-      return res.data !== undefined ? res.data : res
+      return res.data !== undefined ? res.data : res;
     }
     // 非业务结构（如普通 json / 纯文本），原样返回
-    return res
+    return res;
   },
   // ---------- 失败分支：自动刷新 token + 统一错误映射 ----------
   (error) => {
-    const config = error.config || {}
-    const status = error.response && error.response.status
+    const config = error.config || {};
+    const status = error.response && error.response.status;
 
     // ======== 分支一：401 且未重试过且非刷新接口本身 → 尝试自动刷新 ========
     if (
@@ -160,12 +165,12 @@ service.interceptors.response.use(
     ) {
       // 没有 refresh_token：无法续期，直接按过期处理（清 token + 跳登录）
       if (!getRefreshToken()) {
-        clearTokens()
-        redirectToLogin()
+        clearTokens();
+        redirectToLogin();
         if (!config.silentError) {
-          Message.error('登录已过期，请重新登录')
+          Message.error("登录已过期，请重新登录");
         }
-        return Promise.reject(error)
+        return Promise.reject(error);
       }
 
       // 已有刷新正在进行：把本次请求入队，等新 token 后统一重试
@@ -174,76 +179,100 @@ service.interceptors.response.use(
           waitQueue.push((tokenOrErr, isErr) => {
             // 刷新成功 → 用新 token 重试；刷新失败 → reject
             if (isErr) {
-              reject(tokenOrErr)
-              return
+              reject(tokenOrErr);
+              return;
             }
-            config._retried = true
-            resolve(service(config)) // 重新走一遍完整拦截器，自动带上新 token
-          })
-        })
+            config._retried = true;
+            resolve(service(config)); // 重新走一遍完整拦截器，自动带上新 token
+          });
+        });
       }
 
       // 触发一次刷新（单飞）：同一时刻只允许一个刷新请求在途
-      isRefreshing = true
+      isRefreshing = true;
       return requestNewToken()
         .then((token) => {
-          isRefreshing = false
-          const pending = waitQueue
-          waitQueue = []
+          isRefreshing = false;
+          const pending = waitQueue;
+          waitQueue = [];
           // 唤醒所有排队请求，用新 token 重试
-          pending.forEach((cb) => cb(token, false))
-          config._retried = true
-          return service(config) // 重试当前请求
+          pending.forEach((cb) => cb(token, false));
+          config._retried = true;
+          return service(config); // 重试当前请求
         })
         .catch((err) => {
-          isRefreshing = false
-          const pending = waitQueue
-          waitQueue = []
+          isRefreshing = false;
+          const pending = waitQueue;
+          waitQueue = [];
           // 刷新失败：拒绝所有排队请求，并整体登出
-          pending.forEach((cb) => cb(err, true))
-          clearTokens()
-          redirectToLogin()
+          pending.forEach((cb) => cb(err, true));
+          clearTokens();
+          redirectToLogin();
           if (!config.silentError) {
-            Message.error('登录已过期，请重新登录')
+            Message.error("登录已过期，请重新登录");
           }
-          return Promise.reject(err)
-        })
+          return Promise.reject(err);
+        });
     }
 
     // ======== 分支二：其余错误 → 映射为中文提示 ========
-    let msg = ''
+    let msg = "";
     if (error.response) {
       // 有 HTTP 响应：按状态码映射通用文案
       switch (status) {
-        case 400: msg = '请求参数错误'; break
-        case 401: msg = '登录已过期，请重新登录'; break
-        case 403: msg = '没有权限访问该资源'; break
-        case 404: msg = '请求的资源不存在'; break
-        case 405: msg = '请求方法不被允许'; break
-        case 429: msg = '请求过于频繁，请稍后再试'; break
-        case 500: msg = '服务器内部错误'; break
-        case 502: msg = '网关错误'; break
-        case 503: msg = '服务暂不可用'; break
-        case 504: msg = '网关超时'; break
-        default: msg = '请求失败（HTTP ' + status + '）'
+        case 400:
+          msg = "请求参数错误";
+          break;
+        case 401:
+          msg = "登录已过期，请重新登录";
+          break;
+        case 403:
+          msg = "没有权限访问该资源";
+          break;
+        case 404:
+          msg = "请求的资源不存在";
+          break;
+        case 405:
+          msg = "请求方法不被允许";
+          break;
+        case 429:
+          msg = "请求过于频繁，请稍后再试";
+          break;
+        case 500:
+          msg = "服务器内部错误";
+          break;
+        case 502:
+          msg = "网关错误";
+          break;
+        case 503:
+          msg = "服务暂不可用";
+          break;
+        case 504:
+          msg = "网关超时";
+          break;
+        default:
+          msg = "请求失败（HTTP " + status + "）";
       }
-    } else if (error.code === 'ECONNABORTED' || /timeout/i.test(error.message || '')) {
+    } else if (
+      error.code === "ECONNABORTED" ||
+      /timeout/i.test(error.message || "")
+    ) {
       // 超时（axios 超时会以 ECONNABORTED 抛出）
-      msg = '请求超时，请稍后重试'
+      msg = "请求超时，请稍后重试";
     } else if (error.request) {
       // 已发出请求但未收到响应：多半是网络断开
-      msg = '网络异常，请检查网络连接'
+      msg = "网络异常，请检查网络连接";
     } else {
       // 请求配置阶段 / 其他原因
-      msg = (error && error.message) || '未知错误'
+      msg = (error && error.message) || "未知错误";
     }
 
     // 默认统一提示；silentError=true 时静默，由调用方自己展示
     if (!config.silentError) {
-      Message.error(msg)
+      Message.error(msg);
     }
-    return Promise.reject(new Error(msg))
+    return Promise.reject(new Error(msg));
   }
-)
+);
 
-export default service
+export default service;

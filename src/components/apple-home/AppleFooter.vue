@@ -59,9 +59,12 @@
                 class="apple-footer__list"
               >
                 <li v-for="link in group.links" :key="link.text">
-                  <a :href="link.url" target="_blank" rel="noopener noreferrer">{{
-                    link.text
-                  }}</a>
+                  <a
+                    :href="link.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >{{ link.text }}</a
+                  >
                 </li>
               </ul>
             </transition>
@@ -474,8 +477,7 @@ export default {
   }
   /* 展开动画：和 PC 下拉面板一致 scaleY 0.38s；收起无过渡 */
   .footer-expand-enter-active {
-    transition: transform 0.38s cubic-bezier(0.4, 0, 0.6, 1),
-                opacity 0.25s ease;
+    transition: transform 0.38s cubic-bezier(0.4, 0, 0.6, 1), opacity 0.25s ease;
     transform-origin: top;
   }
   .footer-expand-enter {
@@ -489,7 +491,7 @@ export default {
   .apple-footer__divider--legal {
     display: none;
   }
-  .apple-footer__shopline--legal{
+  .apple-footer__shopline--legal {
     margin: 20px 0;
   }
 }

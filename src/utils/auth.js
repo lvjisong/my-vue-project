@@ -12,30 +12,30 @@
  *   - 401 响应拦截器：调 logout() 清状态
  * ============================================================
  */
-import store from '@/store'
+import store from "@/store";
 
-const TOKEN_KEY = 'app_token'
+const TOKEN_KEY = "app_token";
 // TODO-AUTH-REFRESH: 如果后端支持 refresh_token，把下面这个 key 改成后端实际下发的字段名
-const REFRESH_TOKEN_KEY = 'app_refresh_token'
+const REFRESH_TOKEN_KEY = "app_refresh_token";
 
 // ---- Cookie 小工具（无依赖）----
 function setCookie(name, value, days = 7) {
-  const d = new Date()
-  d.setTime(d.getTime() + days * 864e5)
-  document.cookie = `${name}=${value};expires=${d.toUTCString()};path=/`
+  const d = new Date();
+  d.setTime(d.getTime() + days * 864e5);
+  document.cookie = `${name}=${value};expires=${d.toUTCString()};path=/`;
 }
 function getCookie(name) {
-  const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'))
-  return m ? decodeURIComponent(m[1]) : ''
+  const m = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+  return m ? decodeURIComponent(m[1]) : "";
 }
 function delCookie(name) {
-  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`
+  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
 }
 
 export default {
   /** 读 token（Cookie 优先，Vuex 兜底） */
   getToken() {
-    return getCookie(TOKEN_KEY) || store.state.token
+    return getCookie(TOKEN_KEY) || store.state.token;
   },
 
   /**
@@ -44,26 +44,26 @@ export default {
    * @param {object} user  可选，直接塞用户信息（一般留空，走 fetchUser）
    */
   setToken(token, user = null) {
-    setCookie(TOKEN_KEY, token)
-    store.commit('SET_TOKEN', token)
-    if (user) store.commit('SET_USER', user)
+    setCookie(TOKEN_KEY, token);
+    store.commit("SET_TOKEN", token);
+    if (user) store.commit("SET_USER", user);
   },
 
   /** 读当前用户（Vuex） */
   getUser() {
-    return store.state.user
+    return store.state.user;
   },
 
   /** 是否已登录 */
   isLoggedIn() {
-    return !!this.getToken()
+    return !!this.getToken();
   },
 
   /** 退出登录：清 Cookie + Vuex */
   logout() {
-    delCookie(TOKEN_KEY)
-    delCookie(REFRESH_TOKEN_KEY)
-    store.dispatch('logout')
+    delCookie(TOKEN_KEY);
+    delCookie(REFRESH_TOKEN_KEY);
+    store.dispatch("logout");
   },
 
   /**
@@ -72,16 +72,16 @@ export default {
    *   request.js 会自动调本方法。如果后端不支持 refresh_token，保持返回 '' 即可。
    */
   getRefreshToken() {
-    return getCookie(REFRESH_TOKEN_KEY)
+    return getCookie(REFRESH_TOKEN_KEY);
   },
 
   /** 写入刷新 token（登录成功 / 刷新接口返回时调） */
   setRefreshToken(token) {
-    setCookie(REFRESH_TOKEN_KEY, token)
+    setCookie(REFRESH_TOKEN_KEY, token);
   },
 
   /** 刷新用户信息（启动时调一次） */
   fetchUser() {
-    return store.dispatch('fetchUser')
-  }
-}
+    return store.dispatch("fetchUser");
+  },
+};

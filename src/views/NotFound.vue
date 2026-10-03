@@ -7,19 +7,35 @@
 </template>
 
 <script>
-export default { name: 'NotFound' }
+export default { name: "NotFound" };
 </script>
 
 <style scoped>
 .not-found {
-  min-height: 100vh; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 16px;
-  background: #f5f5f7; color: #1d1d1f; font-family: -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  font-family: -apple-system, sans-serif;
 }
-.not-found h1 { font-size: 80px; margin: 0; }
-.not-found p { font-size: 18px; color: #6e6e73; }
+.not-found h1 {
+  font-size: 80px;
+  margin: 0;
+}
+.not-found p {
+  font-size: 18px;
+  color: #6e6e73;
+}
 .not-found__btn {
-  background: #0071e3; color: #fff; padding: 10px 22px;
-  border-radius: 999px; text-decoration: none; font-size: 15px;
+  background: #0071e3;
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 15px;
 }
 </style>
