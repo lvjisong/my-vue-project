@@ -34,6 +34,7 @@ export const del = (url, config = {}) =>
   request.delete(url, config)
 
 // ===== 业务接口（按需新增）=====
+// TODO-API: 接后端后按真实接口路径调整下面这些 url，组件里不用动
 
 /** 购物车列表 */
 export const getCartList = (params) => get('/cart/list', params)
