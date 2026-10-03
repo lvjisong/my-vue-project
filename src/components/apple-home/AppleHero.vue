@@ -119,11 +119,6 @@ export default {
     contentPosition: { type: String, default: "top" }, // top | bottom
     parallax: { type: Number, default: 0.15 },
   },
-  mounted() {
-    // 无任何滚动特效，全部跟随页面自然滚动
-  },
-  beforeDestroy() {},
-  methods: {},
 };
 </script>
 

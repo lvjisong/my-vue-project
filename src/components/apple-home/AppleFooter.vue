@@ -116,6 +116,18 @@
 </template>
 
 <script>
+/**
+ * AppleFooter.vue —— apple.com.cn 页脚复刻
+ *
+ * 结构（自上而下）：
+ *   1. 法律小字（iCloud 优惠 / Trade In 折抵说明）
+ *   2. 5 列链接组（PC 常显，移动端折叠为手风琴）
+ *   3. 更多选购方式 + 客服电话
+ *   4. Copyright + 法律导航 + ICP 备案号
+ *
+ * 移动端交互：点组标题 toggle 展开/收起该组链接（this.$set 保证 Vue2 响应式）
+ * 主题：颜色全部走 theme.scss 的 CSS 变量（--bg-page / --text-secondary 等），跟随系统深浅色
+ */
 export default {
   name: "AppleFooter",
   data() {
