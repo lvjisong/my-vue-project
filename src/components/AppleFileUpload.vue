@@ -57,14 +57,14 @@
           <div class="apple-file-card__icon">
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
               <path
-                d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"
+                :d="ICONS.file"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="1.6"
                 stroke-linejoin="round"
               />
               <path
-                d="M14 3v5h5"
+                :d="ICONS.fileNew"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="1.6"
@@ -94,7 +94,7 @@
           >
             <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true">
               <path
-                d="M5 5l10 10M15 5L5 15"
+                :d="ICONS.closeX"
                 stroke="currentColor"
                 stroke-width="1.8"
                 stroke-linecap="round"
@@ -136,7 +136,7 @@
                 :style="{ transform: `scale(${checkScale})` }"
               >
                 <path
-                  d="M7 14.5l4.5 4.5L21 9.5"
+                  :d="ICONS.check"
                   fill="none"
                   stroke="#34c759"
                   stroke-width="3.2"
@@ -173,6 +173,7 @@
 </template>
 
 <script>
+import { ICONS } from "@/constants/icons";
 import SparkMD5 from "spark-md5"; // MD5 计算库
 import { animateSpring } from "../utils/spring"; // 共享弹簧物理引擎（rAF 驱动，可打断）
 import request from "../utils/request"; // 统一 axios 封装（token / 业务码 / 自动刷新 / 错误处理 / 上传进度）
@@ -217,6 +218,9 @@ export default {
 
   data() {
     return {
+      // ---- SVG 图标 path（从 @/constants/icons 引入）----
+      ICONS,
+
       // ---- 上传业务状态 ----
       // 待上传文件列表，每个文件独立持有处理状态：
       // { uid, raw, name, size, sliced, md5, chunks, processing }
@@ -428,6 +432,9 @@ export default {
         const entry = {
           uid: this.getUid(),
           raw: raw,
+          data() {
+            return { ICONS };
+          },
           name: raw.name,
           size: raw.size,
           sliced: false,
@@ -637,6 +644,9 @@ export default {
         } catch (err) {
           // 单个文件失败：记录原因后继续上传剩余文件，不让一个失败拖垮整批
           failList.push({
+            data() {
+              return { ICONS };
+            },
             name: entry.name,
             message: (err && err.message) || "上传失败",
           });
