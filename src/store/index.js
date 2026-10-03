@@ -3,7 +3,13 @@
  * store/index.js —— Vuex 全局状态（Vuex 4 写法）
  * ------------------------------------------------------------
  * Vue 3 用 createStore() 创建 store 实例，替代 Vue 2 的 new Vuex.Store()。
- * 当前只有 auth 模块（user/token）。后续加购物车、主题等再拆 modules。
+ * 当前只有 auth 模块（user/token）+ cart 购物车模块。
+ *
+ * 【购物车持久化】
+ *   购物车数据存在 localStorage，刷新页面不丢失。
+ *   - 初始化时从 localStorage 读回来
+ *   - 每次改购物车自动同步到 localStorage
+ *   - 想清掉：浏览器控制台 localStorage.removeItem("cart_items")
  * ============================================================
  */
 import { createStore } from "vuex";
@@ -13,12 +19,41 @@ import { createStore } from "vuex";
 // eslint-disable-next-line no-unused-vars
 import axios from "axios";
 
+// localStorage 里购物车数据的 key
+const CART_STORAGE_KEY = "cart_items";
+
+/** 从 localStorage 读购物车数据（刷新页面后恢复） */
+function loadCartFromStorage() {
+  try {
+    const raw = localStorage.getItem(CART_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return []; // 解析失败就返回空数组，不要报错
+  }
+}
+
+/** 把购物车数据写到 localStorage */
+function saveCartToStorage(items) {
+  localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+}
+
 export default createStore({
   state: {
     /** 当前登录用户，未登录为 null */
     user: null,
     /** token（一般由后端通过 Cookie 下发，这里仅做内存缓存，避免每次读 Cookie） */
     token: "",
+    /**
+     * 购物车数据（Vuex 传参示例）
+     * 为什么放 Vuex 而不是路由传？
+     *   - 商品是对象（id/name/price/图片），路由 query 只能传字符串
+     *   - 购物车要在多个页面共享（商品页加，购物袋页看）
+     *
+     * 持久化：初始化时从 localStorage 读，刷新页面不丢
+     */
+    cart: {
+      items: loadCartFromStorage(), // 购物车商品列表，每个元素是 { id, name, price }
+    },
   },
 
   mutations: {
@@ -31,6 +66,23 @@ export default createStore({
     RESET_AUTH(state) {
       state.user = null;
       state.token = "";
+    },
+
+    // ======== 购物车相关 mutations ========
+    /**
+     * 加商品到购物车
+     * @param {object} product 商品对象 { id, name, price }
+     */
+    CART_ADD_ITEM(state, product) {
+      state.cart.items.push(product);
+      // 改完立刻同步到 localStorage，刷新不丢
+      saveCartToStorage(state.cart.items);
+    },
+    /** 清空购物车 */
+    CART_CLEAR(state) {
+      state.cart.items = [];
+      // 同步清掉 localStorage
+      localStorage.removeItem(CART_STORAGE_KEY);
     },
   },
 
@@ -77,5 +129,7 @@ export default createStore({
 
   getters: {
     isLoggedIn: (state) => !!state.user || !!state.token,
+    /** 购物车商品总数（页角标显示用） */
+    cartCount: (state) => state.cart.items.length,
   },
 });

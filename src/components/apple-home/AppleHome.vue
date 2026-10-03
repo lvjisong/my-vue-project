@@ -7,6 +7,21 @@
     <!-- Hero 横幅（数组循环渲染） -->
     <AppleHero v-for="hero in heroes" :key="hero.title" v-bind="hero" />
 
+    <!-- ======== 路由传参测试区（演示用，正式上线可删） ======== -->
+    <section class="route-demo" v-if="isDemo">
+      <h3>路由传参测试</h3>
+      <div class="route-demo__buttons">
+        <!-- 方式 1：路径参数 /product/xxx -->
+        <button class="btn btn--primary" @click="goProduct">去产品详情页（路径参数）</button>
+        <!-- 方式 2：查询参数 /search?q=xxx -->
+        <button class="btn btn--primary" @click="goSearch">去搜索页（查询参数）</button>
+      </div>
+      <p class="route-demo__tip">
+        Vuex 购物车：当前 <strong>{{ cartCount }}</strong> 件商品
+        <!-- <router-link to="/cart">购物袋</router-link> 看看 -->
+      </p>
+    </section>
+
     <!-- 双列磁贴 -->
     <AppleTileGrid :tiles="tiles" />
 
@@ -50,6 +65,9 @@ export default {
   components: { AppleNav, AppleHero, AppleTileGrid, AppleFooter },
   data() {
     return {
+      // 是否显示路由传参测试区（正式上线改成 false）
+      isDemo: true,
+
       /**
        * Hero 横幅配置数组（按官网首页顺序）
        * 字段同 AppleHero props：title/subtitle/theme/image/imageMobile/fallbackBg/
@@ -237,6 +255,31 @@ export default {
       ],
     };
   },
+
+  // ======== 路由传参测试区用到的 ========
+  computed: {
+    /** 从 Vuex 读取购物车商品总数 */
+    cartCount() {
+      return this.$store.getters.cartCount;
+    },
+  },
+  
+  methods: {
+    /** 跳产品详情页（路径参数方式） */
+    goProduct() {
+      this.$router.push({
+        name: "Product",
+        params: { id: "iPhone-18-Pro" },
+      });
+    },
+    /** 跳搜索页（查询参数方式） */
+    goSearch() {
+      this.$router.push({
+        path: "/search",
+        query: { q: "iPhone 18", page: 1, category: "iPhone" },
+      });
+    },
+  },
 };
 </script>
 
@@ -244,5 +287,59 @@ export default {
 .apple-home {
   padding-top: 44px;
   background: #fff;
+}
+
+/* ======== 路由传参测试区样式（演示用，正式上线可删） ======== */
+.route-demo {
+  max-width: 1024px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #f5f5f7;
+  border-radius: 12px;
+
+  h3 {
+    margin: 0 0 20px;
+    font-size: 20px;
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #0071e3;
+      color: #fff;
+      font-size: 15px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.85;
+      }
+    }
+  }
+
+  &__tip {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
+
+    strong {
+      color: #1d1d1f;
+    }
+
+    a {
+      color: #0071e3;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }
 </style>

@@ -50,6 +50,31 @@ const routes = [
       requireAuth: false,
     },
   },
+
+  // ======== 路由传参示例页面 ========
+  // 路径参数示例：/product/iphone-18-pro
+  {
+    path: "/product/:id",
+    name: "Product",
+    component: () => import("@/views/Product.vue"),
+    meta: {
+      title: "产品详情",
+      description: "产品详情页示例，演示路径参数传参。",
+      requireAuth: false,
+    },
+  },
+  // 查询参数示例：/search?q=iPhone&page=2
+  {
+    path: "/search",
+    name: "Search",
+    component: () => import("@/views/Search.vue"),
+    meta: {
+      title: "搜索",
+      description: "搜索页示例，演示查询参数传参。",
+      requireAuth: false,
+    },
+  },
+
   // 404 兜底（Vue Router 4 通配符写法：/:pathMatch(.*)*）
   {
     path: "/:pathMatch(.*)*",
