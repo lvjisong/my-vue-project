@@ -347,10 +347,11 @@
 </template>
 
 <script>
-// 官网外链常量统一从 @/constants/urls 引入
 import { APPLE, CART_LINKS, NAV_TOP, NAV_FLYOUT } from "@/constants/urls";
 // SVG path d 属性统一从 @/constants/icons 引入
 import { ICONS } from "@/constants/icons";
+// 防抖：hover 切换面板用，防止快速划过导航项时面板闪来闪去
+import debounce from "@/utils/debounce";
 
 // 移动端断点（和 styles/_variables.scss 里的 $breakpoint-mobile 保持一致，改的时候两边一起改）
 const MOBILE_BREAKPOINT = 734;
@@ -802,15 +803,24 @@ export default {
     stagger(li, gi) {
       return { transitionDelay: `${li * 20 + (gi + 1) * 80}ms` };
     },
-    /** 鼠标移入某个一级菜单：取消关闭计时，显示对应下拉面板 */
+    /**
+     * 鼠标移入某个一级菜单：
+     * 1. 立刻取消关闭计时（防止面板关掉）
+     * 2. 切换面板内容加 50ms 防抖：鼠标快速划过导航项时，只有最后停住的才真正切换，不闪烁
+     */
     openMenu(index) {
+      // 立刻清掉关闭计时器：鼠标移进来了，不要关
       clearTimeout(this.closeTimer);
       this.isClosing = false;
-      // 同一个 flyout，内容直接从购物袋切到导航，无残影
       this.panelMode = "nav";
+      // 防抖：50ms 内连续 hover 不同项，只切换最后一次
+      this.switchPanel(index);
+    },
+    // 面板切换防抖（50ms，人眼几乎感觉不到，但能防止快速划过闪烁）
+    switchPanel: debounce(function (index) {
       this.activeIndex = index;
       this.showPanel = true;
-    },
+    }, 50),
     /** 鼠标移出导航栏：延迟 200ms 后先隐藏内容再收起面板，避免鼠标快速划过抖动 */
     scheduleClose() {
       clearTimeout(this.closeTimer);

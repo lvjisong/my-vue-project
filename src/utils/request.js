@@ -150,10 +150,36 @@ service.interceptors.response.use(
     // 非业务结构（如普通 json / 纯文本），原样返回
     return res;
   },
-  // ---------- 失败分支：自动刷新 token + 统一错误映射 ----------
-  (error) => {
+  // ---------- 失败分支：自动重试 + 自动刷新 token + 统一错误映射 ----------
+  async (error) => {
     const config = error.config || {};
     const status = error.response && error.response.status;
+
+    // ======== 分支零：GET 请求自动重试（网络抖动/5xx 临时故障） ========
+    // 规则：
+    //   - 默认只重试 GET 请求（POST/PUT/DELETE 有副作用，不自动重试，防止重复提交）
+    //   - 最多重试 2 次，每次间隔 1 秒（指数退避）
+    //   - 4xx 客户端错误不重试（参数错/没权限/不存在，重试也没用）
+    //   - 401 不在这里重试（下面有专门的刷新 token 逻辑）
+    //   - 想关闭：请求时加 config.retry = false
+    //   - 想开启 POST 重试：请求时加 config.retry = true（谨慎，确认接口幂等）
+    const defaultRetry = config.method === "get"; // 默认只有 GET 重试
+    const shouldRetry = config.retry !== false && (config.retry === true || defaultRetry);
+    const maxRetries = 2; // 最多重试 2 次
+    const retryCount = config._retryCount || 0;
+
+    if (
+      shouldRetry &&
+      retryCount < maxRetries &&
+      !status // 没有响应 = 网络错误/超时
+    ) {
+      config._retryCount = retryCount + 1;
+      // 指数退避：第 1 次重试等 1s，第 2 次等 2s
+      const delay = 1000 * config._retryCount;
+      await new Promise((r) => setTimeout(r, delay));
+      console.log(`[retry] GET 请求失败，第 ${config._retryCount} 次重试...`);
+      return service(config); // 重新发一次请求
+    }
 
     // ======== 分支一：401 且未重试过且非刷新接口本身 → 尝试自动刷新 ========
     if (
