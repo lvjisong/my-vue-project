@@ -366,12 +366,11 @@ export default {
 .apple-footer {
   background: var(--bg-page);
   color: var(--text-secondary);
-  font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC",
-    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  font-family: $font-stack-text;
   font-size: 12px;
 }
 .apple-footer__inner {
-  max-width: 1024px;
+  max-width: $content-max-width;
   margin: 0 auto;
   padding: 20px 22px;
 }
@@ -474,7 +473,7 @@ export default {
   color: var(--text-secondary);
 }
 
-@media (max-width: 734px) {
+@media (max-width: $breakpoint-mobile) {
   .apple-footer__cols {
     grid-template-columns: 1fr;
     gap: 0;
@@ -518,7 +517,7 @@ export default {
     margin: 20px 0;
   }
 }
-@media (min-width: 735px) {
+@media (min-width: $breakpoint-mobile + 1px) {
   .apple-footer__list {
     display: block !important;
   }

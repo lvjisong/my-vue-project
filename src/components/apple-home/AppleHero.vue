@@ -123,8 +123,7 @@ export default {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC",
-    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  font-family: $font-stack;
   overflow: hidden;
 }
 .apple-hero--light {
@@ -209,7 +208,7 @@ export default {
   display: none;
 }
 
-@media (max-width: 734px) {
+@media (max-width: $breakpoint-mobile) {
   .apple-hero {
     height: 500px;
     min-height: 0;

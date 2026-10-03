@@ -83,8 +83,7 @@ export default {
   gap: 12px;
   background: #fff;
   padding: 12px;
-  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC",
-    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  font-family: $font-stack;
 }
 .apple-tile {
   position: relative;
@@ -174,7 +173,7 @@ export default {
 .apple-tile__btn:active {
   transform: scale(0.97);
 }
-@media (max-width: 734px) {
+@media (max-width: $breakpoint-mobile) {
   .apple-tiles {
     grid-template-columns: 1fr;
     padding: 0;

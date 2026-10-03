@@ -352,6 +352,9 @@ import { APPLE, CART_LINKS, NAV_TOP, NAV_FLYOUT } from "@/constants/urls";
 // SVG path d 属性统一从 @/constants/icons 引入
 import { ICONS } from "@/constants/icons";
 
+// 移动端断点（和 styles/_variables.scss 里的 $breakpoint-mobile 保持一致，改的时候两边一起改）
+const MOBILE_BREAKPOINT = 734;
+
 /**
  * AppleNav —— 严格按 apple.com.cn globalnav 样式还原
  *
@@ -866,7 +869,7 @@ export default {
      * - 移动端：和汉堡菜单共用一个全屏面板
      */
     toggleCart() {
-      const isMobile = window.matchMedia("(max-width: 734px)").matches;
+      const isMobile = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
       if (isMobile) {
         if (this.mobileOpen && this.mobileMode === "cart") {
           // 购物袋面板已开 → 带动画关闭
@@ -918,8 +921,7 @@ export default {
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
   color: rgba(255, 255, 255, 0.8);
-  font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC",
-    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  font-family: $font-stack-text;
 }
 /* 展开时导航条本体变为不透明深色 */
 .apple-nav.is-open {
@@ -927,7 +929,7 @@ export default {
 }
 
 .apple-nav__inner {
-  max-width: 1024px;
+  max-width: $content-max-width;
   height: 44px;
   margin: 0 auto;
   padding: 0 22px;
@@ -1024,7 +1026,7 @@ export default {
   z-index: 2;
 }
 .apple-nav__flyout-inner {
-  max-width: 1024px;
+  max-width: $content-max-width;
   margin: 0 auto;
   padding: 40px 22px 56px;
   display: flex;
@@ -1156,7 +1158,7 @@ export default {
   display: none;
 }
 
-@media (max-width: 734px) {
+@media (max-width: $breakpoint-mobile) {
   .apple-nav__menu {
     display: none;
   }
@@ -1261,7 +1263,7 @@ export default {
   /* 继承 .apple-nav__flyout 的 fixed 定位与 #161617 底色 */
 }
 .apple-nav__cart {
-  max-width: 1024px;
+  max-width: $content-max-width;
   margin: 0 auto;
   padding: 48px 22px 80px;
 }

@@ -896,8 +896,7 @@ export default {
 /* ---- Apple 风格按钮：参考 apple.com 按钮的方形圆角 + 主/次级层次 ---- */
 .upload-row .apple-btn {
   border-radius: 8px; /* 方形圆角，参照 apple.com 按钮样式 */
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC",
-    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  font-family: $font-stack-text;
   font-weight: 500;
   letter-spacing: -0.01em;
   transition: transform 100ms ease-out, background-color 150ms ease-out, border-color 150ms ease-out,
@@ -949,8 +948,7 @@ export default {
   margin-left: 12px;
   font-size: 12px;
   color: #6e6e73;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC",
-    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  font-family: $font-stack-text;
 }
 
 /* 原生文件选择框隐藏，仅由按钮触发 */
@@ -1009,8 +1007,7 @@ export default {
   /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04),
                 0 4px 12px rgba(0, 0, 0, 0.08),
                 0 12px 28px rgba(0, 0, 0, 0.06); */
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC",
-    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  font-family: $font-stack-text;
   text-align: left;
   border: 1px solid rgba(60, 60, 67, 0.18);
 }
@@ -1097,8 +1094,7 @@ export default {
   backdrop-filter: blur(30px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.08);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC",
-    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  font-family: $font-stack-text;
   will-change: transform, opacity;
 }
 

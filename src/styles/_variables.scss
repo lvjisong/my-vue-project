@@ -15,9 +15,20 @@ $apple-bg-light: #f5f5f7;
 $apple-bg-card: #fbfbfd;
 
 // ===== 字体栈 =====
+// 标题用 Display（更宽，字重对比明显）
 $font-stack: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC",
+  "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+// 正文用 Text（更紧凑，适合小字号）
+$font-stack-text: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC",
   "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
 
 // ===== 尺寸 =====
 $nav-height: 44px;
 $radius-pill: 999px;
+
+// ===== 响应式断点（和 JS 里的 MOBILE_BREAKPOINT 保持一致）=====
+// ≤734px 为移动端，>734px 为 PC 端
+$breakpoint-mobile: 734px;
+
+// ===== 内容区最大宽度（Nav / Footer 共用）=====
+$content-max-width: 1024px;

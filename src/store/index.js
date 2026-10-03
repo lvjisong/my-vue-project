@@ -55,7 +55,7 @@ export default createStore({
      *   },
      */
     async fetchUser() {
-      console.log("fetchUser action called, but no backend API is connected.");
+      // TODO: 接后端后替换为真实 API 调用
     },
 
     /**
