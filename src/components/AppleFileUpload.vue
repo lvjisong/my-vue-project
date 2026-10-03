@@ -40,9 +40,8 @@
         >
         <!-- 主按钮：开始上传（上传中或处理中禁用） -->
         <el-button
-          class="apple-btn"
+          class="apple-btn apple-btn--gap"
           type="primary"
-          style="margin-left: 10px"
           :disabled="uploading || processingAny"
           @click="submitUpload($event)"
           >开始上传</el-button
@@ -904,6 +903,11 @@ export default {
   background: rgba(255, 255, 255, 0.82);
   border-color: rgba(60, 60, 67, 0.2);
   color: #1d1d1f;
+}
+
+/* 主按钮与选择按钮之间的间距 */
+.upload-row .apple-btn--gap {
+  margin-left: 10px;
 }
 .upload-row .apple-btn-secondary:not(.is-disabled):hover,
 .upload-row .apple-btn-secondary:not(.is-disabled):focus {

@@ -39,9 +39,10 @@ import AppleNav from "./AppleNav.vue";
 import AppleHero from "./AppleHero.vue";
 import AppleTileGrid from "./AppleTileGrid.vue";
 import AppleFooter from "./AppleFooter.vue";
+import { APPLE, ICLOUD_OFFER } from "@/constants/urls";
 
 /** 官网 CDN 前缀（仅用于外链按钮跳转，不再用于图片） */
-const CDN = "https://www.apple.com.cn";
+const CDN = APPLE;
 /** 图片本地前缀（public/images/，由 .env 配置） */
 const IMG = process.env.VUE_APP_IMAGE_BASE || "/images";
 
@@ -165,7 +166,7 @@ export default {
             {
               text: "进一步了解",
               type: "primary",
-              url: "https://offers.icloud.apple/cn-offer",
+              url: ICLOUD_OFFER,
             },
           ],
         },

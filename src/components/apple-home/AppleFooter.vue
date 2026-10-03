@@ -9,10 +9,7 @@
           RMB 6 的价格自动续订，直至取消订阅。每个 Apple
           账户仅可兑换一次优惠。需要在符合条件的设备激活后 3
           个月内兑换此优惠。须遵守限制条件及其他条款（参见
-          <a
-            style="text-decoration: underline; color: #6e6e73"
-            href="https://www.apple.com.cn/promo"
-            target="_blank"
+          <a class="apple-footer__note-link" :href="APPLE + '/promo'" target="_blank"
             >apple.com.cn/promo</a
           >）。iCloud
           在中国大陆由云上贵州（云上艾珀（贵州）技术有限公司）运营。某些功能要求使用无线局域网连接。某些服务仅限最多
@@ -62,18 +59,18 @@
 
       <p class="apple-footer__shopline apple-footer__shopline--legal">
         更多选购方式：<a
-          href="https://www.apple.com.cn/retail/"
+          class="apple-footer__inline-link"
+          :href="RETAIL.main"
           target="_blank"
           rel="noopener noreferrer"
-          style="text-decoration: underline"
           >查找你附近的 Apple Store 零售店</a
         >及<a
-          href="https://www.apple.com.cn/retail/"
+          class="apple-footer__inline-link"
+          :href="RETAIL.main"
           target="_blank"
           rel="noopener noreferrer"
-          style="text-decoration: underline"
           >更多门店</a
-        >，或者致电 <a href="tel:400-666-8800" style="text-decoration: underline">400-666-8800</a>。
+        >，或者致电 <a class="apple-footer__inline-link" href="tel:400-666-8800">400-666-8800</a>。
       </p>
 
       <hr class="apple-footer__divider apple-footer__divider--legal" />
@@ -108,26 +105,34 @@
  *   3. 更多选购方式 + 客服电话
  *   4. Copyright + 法律导航 + ICP 备案号
  *
- * 移动端交互：点组标题 toggle 展开/收起该组链接（this.$set 保证 Vue2 响应式）
+ * 移动端交互：点组标题 toggle 展开/收起该组链接
  * 主题：颜色全部走 theme.scss 的 CSS 变量（--bg-page / --text-secondary 等），跟随系统深浅色
  */
+// 官网外链常量统一从 @/constants/urls 引入
+import { APPLE, SHOP, RETAIL, APPLE_ACCOUNT, ICLOUD, APP_STORE_APP } from "@/constants/urls";
+
 export default {
   name: "AppleFooter",
   data() {
+    // 局部变量，方便下面数组里拼接 URL
+    const B = APPLE;
     return {
       open: {},
+      // 暴露给模板用的外链常量
+      APPLE,
+      RETAIL,
       legalLinks: [
-        { text: "隐私政策", url: "https://www.apple.com.cn/legal/privacy/" },
+        { text: "隐私政策", url: `${B}/legal/privacy/` },
         {
           text: "使用条款",
-          url: "https://www.apple.com.cn/legal/internet-services/terms/site.html",
+          url: `${B}/legal/internet-services/terms/site.html`,
         },
         {
           text: "销售政策",
-          url: "https://www.apple.com.cn/cn/shop/goto/help/sales_refunds",
+          url: SHOP.salesRefunds,
         },
-        { text: "法律信息", url: "https://www.apple.com.cn/legal/" },
-        { text: "网站地图", url: "https://www.apple.com.cn/sitemap/" },
+        { text: "法律信息", url: `${B}/legal/` },
+        { text: "网站地图", url: `${B}/sitemap/` },
       ],
       columns: [
         [
@@ -136,36 +141,36 @@ export default {
             links: [
               {
                 text: "商店",
-                url: "https://www.apple.com.cn/cn/shop/goto/store",
+                url: SHOP.store,
               },
-              { text: "Mac", url: "https://www.apple.com.cn/mac/" },
-              { text: "iPad", url: "https://www.apple.com.cn/ipad/" },
-              { text: "iPhone", url: "https://www.apple.com.cn/iphone/" },
-              { text: "Watch", url: "https://www.apple.com.cn/watch/" },
+              { text: "Mac", url: `${B}/mac/` },
+              { text: "iPad", url: `${B}/ipad/` },
+              { text: "iPhone", url: `${B}/iphone/` },
+              { text: "Watch", url: `${B}/watch/` },
               {
                 text: "Vision",
-                url: "https://www.apple.com.cn/apple-vision-pro/",
+                url: `${B}/apple-vision-pro/`,
               },
-              { text: "AirPods", url: "https://www.apple.com.cn/airpods/" },
-              { text: "家居", url: "https://www.apple.com.cn/apple-home/" },
-              { text: "AirTag", url: "https://www.apple.com.cn/airtag/" },
+              { text: "AirPods", url: `${B}/airpods/` },
+              { text: "家居", url: `${B}/apple-home/` },
+              { text: "AirTag", url: `${B}/airtag/` },
               {
                 text: "配件",
-                url: "https://www.apple.com.cn/cn/shop/goto/buy_accessories",
+                url: SHOP.buyAccessories,
               },
               {
                 text: "App Store 充值卡",
-                url: "https://www.apple.com.cn/cn/shop/goto/giftcards",
+                url: SHOP.giftCards,
               },
             ],
           },
           {
             heading: "Apple 钱包",
             links: [
-              { text: "Apple Pay", url: "https://www.apple.com.cn/apple-pay/" },
+              { text: "Apple Pay", url: `${B}/apple-pay/` },
               {
                 text: "Apple Pay 公交",
-                url: "https://www.apple.com.cn/apple-pay/transit/",
+                url: `${B}/apple-pay/transit/`,
               },
             ],
           },
@@ -176,13 +181,13 @@ export default {
             links: [
               {
                 text: "管理你的 Apple 账户",
-                url: "https://account.apple.com/cn/",
+                url: APPLE_ACCOUNT,
               },
               {
                 text: "Apple Store 账户",
-                url: "https://www.apple.com.cn/cn/shop/goto/account",
+                url: SHOP.account,
               },
-              { text: "iCloud.com", url: "https://www.icloud.com/" },
+              { text: "iCloud.com", url: ICLOUD },
             ],
           },
           {
@@ -190,13 +195,13 @@ export default {
             links: [
               {
                 text: "Apple Music",
-                url: "https://www.apple.com.cn/apple-music/",
+                url: `${B}/apple-music/`,
               },
               {
                 text: "Apple 播客",
-                url: "https://www.apple.com.cn/apple-podcasts/",
+                url: `${B}/apple-podcasts/`,
               },
-              { text: "App Store", url: "https://www.apple.com.cn/app-store/" },
+              { text: "App Store", url: `${B}/app-store/` },
             ],
           },
         ],
@@ -204,46 +209,46 @@ export default {
           {
             heading: "Apple Store 商店",
             links: [
-              { text: "查找零售店", url: "https://www.apple.com.cn/retail/" },
+              { text: "查找零售店", url: RETAIL.main },
               {
                 text: "Genius Bar 天才吧",
-                url: "https://www.apple.com.cn/retail/geniusbar/",
+                url: RETAIL.geniusBar,
               },
               {
                 text: "Today at Apple",
-                url: "https://www.apple.com.cn/today/",
+                url: RETAIL.today,
               },
               {
                 text: "团体预约",
-                url: "https://www.apple.com.cn/today/groups/",
+                url: RETAIL.groups,
               },
               {
                 text: "Apple 夏令营",
-                url: "https://www.apple.com.cn/today/camp/",
+                url: RETAIL.camp,
               },
               {
                 text: "Apple Store App",
-                url: "https://apps.apple.com/cn/app/apple-store/id375380948",
+                url: APP_STORE_APP,
               },
               {
                 text: "认证的翻新产品",
-                url: "https://www.apple.com.cn/cn/shop/goto/special_deals",
+                url: SHOP.specialDeals,
               },
               {
                 text: "Apple Trade In 换购计划",
-                url: "https://www.apple.com.cn/cn/shop/goto/trade_in",
+                url: SHOP.tradeIn,
               },
               {
                 text: "分期付款",
-                url: "https://www.apple.com.cn/cn/shop/goto/ww/financing",
+                url: SHOP.financing,
               },
               {
                 text: "订单状态",
-                url: "https://www.apple.com.cn/cn/shop/goto/order/list",
+                url: SHOP.orderList,
               },
               {
                 text: "选购帮助",
-                url: "https://www.apple.com.cn/cn/shop/goto/help",
+                url: SHOP.help,
               },
             ],
           },
@@ -254,11 +259,11 @@ export default {
             links: [
               {
                 text: "Apple 与商务",
-                url: "https://www.apple.com.cn/business/",
+                url: `${B}/business/`,
               },
               {
                 text: "商务选购",
-                url: "https://www.apple.com.cn/retail/business/",
+                url: RETAIL.business,
               },
             ],
           },
@@ -267,11 +272,11 @@ export default {
             links: [
               {
                 text: "Apple 与教育",
-                url: "https://www.apple.com.cn/education/",
+                url: `${B}/education/`,
               },
               {
                 text: "高校师生选购",
-                url: "https://www.apple.com.cn/cn/shop/goto/educationrouting",
+                url: SHOP.educationRouting,
               },
             ],
           },
@@ -282,42 +287,42 @@ export default {
             links: [
               {
                 text: "无障碍使用",
-                url: "https://www.apple.com.cn/accessibility/",
+                url: `${B}/accessibility/`,
               },
               {
                 text: "教育",
-                url: "https://www.apple.com.cn/education-initiative/",
+                url: `${B}/education-initiative/`,
               },
               {
                 text: "环境责任",
-                url: "https://www.apple.com.cn/environment/",
+                url: `${B}/environment/`,
               },
-              { text: "隐私", url: "https://www.apple.com.cn/privacy/" },
+              { text: "隐私", url: `${B}/privacy/` },
               {
                 text: "供应链创新",
-                url: "https://www.apple.com.cn/supply-chain/",
+                url: `${B}/supply-chain/`,
               },
             ],
           },
           {
             heading: "关于 Apple",
             links: [
-              { text: "Newsroom", url: "https://www.apple.com.cn/newsroom/" },
+              { text: "Newsroom", url: `${B}/newsroom/` },
               {
                 text: "Apple 管理层",
-                url: "https://www.apple.com.cn/leadership/",
+                url: `${B}/leadership/`,
               },
-              { text: "工作机会", url: "https://www.apple.com.cn/jobs/" },
+              { text: "工作机会", url: `${B}/jobs/` },
               {
                 text: "创造就业",
-                url: "https://www.apple.com.cn/job-creation/",
+                url: `${B}/job-creation/`,
               },
               {
                 text: "商业道德与合规",
-                url: "https://www.apple.com.cn/compliance/",
+                url: `${B}/compliance/`,
               },
-              { text: "活动", url: "https://www.apple.com.cn/apple-events/" },
-              { text: "联系 Apple", url: "https://www.apple.com.cn/contact/" },
+              { text: "活动", url: `${B}/apple-events/` },
+              { text: "联系 Apple", url: `${B}/contact/` },
             ],
           },
         ],
@@ -356,6 +361,17 @@ export default {
   max-width: 1024px;
   margin: 0 auto;
   padding: 20px 22px;
+}
+
+/* 法律小字里的链接（iCloud promo 说明） */
+.apple-footer__note-link {
+  text-decoration: underline;
+  color: #6e6e73;
+}
+
+/* 底部选购方式/电话里的内联链接 */
+.apple-footer__inline-link {
+  text-decoration: underline;
 }
 
 /* 法律小字 */

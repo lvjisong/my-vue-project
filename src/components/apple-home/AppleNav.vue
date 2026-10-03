@@ -18,7 +18,7 @@
         <!-- Apple Logo（官网 SVG）：hover 时收起下拉面板 -->
         <a
           class="apple-nav__logo"
-          href="https://www.apple.com.cn/"
+          :href="APPLE_URL"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Apple"
@@ -51,7 +51,7 @@
         <div class="apple-nav__actions">
           <a
             class="apple-nav__icon"
-            href="https://www.apple.com.cn/cn/search"
+            :href="SEARCH_URL"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="搜索"
@@ -367,6 +367,9 @@
 </template>
 
 <script>
+// 官网外链常量统一从 @/constants/urls 引入，不要在组件里写死完整 URL
+import { APPLE, SUPPORT, SHOP, DISCUSSIONS, CHECK_COVERAGE, CART_LINKS } from "@/constants/urls";
+
 /**
  * AppleNav —— 严格按 apple.com.cn globalnav 样式还原
  *
@@ -399,6 +402,10 @@ export default {
   name: "AppleNav",
   data() {
     return {
+      // ===== 官网外链（从 @/constants/urls 引入，模板里用）=====
+      APPLE_URL: APPLE, // logo 点击跳官网首页
+      SEARCH_URL: `${APPLE}/cn/search`, // 搜索图标跳转
+
       // ===== PC hover 下拉面板状态（导航 / 购物袋共用一个 flyout）=====
       activeIndex: -1, // 当前 hover 的导航项下标，-1 表示无（仅 nav 模式用）
       showPanel: false, // flyout 是否可见
@@ -422,8 +429,7 @@ export default {
         title: "你的购物袋是空的。",
         sub: {
           linkText: "登录",
-          linkUrl:
-            "https://secure8.www.apple.com.cn/shop/signIn?ssi=4AAABoQG73tUBIBmGXTMK5Q6yQ2mAYX9IMGqUGU5SSFf7GKjmyy1eUY3ZAAAAHGh0dHBzOi8vd3d3LmFwcGxlLmNvbS5jbi98fHwAAgEjLnSNMilLOoDhP2AYl0EBboujTCt3Bqr0VWHvfONqUg",
+          linkUrl: CART_LINKS.signIn,
           text: "查看你是否有收藏商品",
         },
         heading: "个人资料",
@@ -431,22 +437,22 @@ export default {
           {
             icon: "order",
             label: "订单",
-            url: "https://www.apple.com.cn/shop/order/list",
+            url: CART_LINKS.orderList,
           },
           {
             icon: "favorites",
             label: "你的收藏",
-            url: "https://secure8.www.apple.com.cn/shop/signIn?ssi=4AAABoQHOZaQBIN96jEzWUZEr_RzGMuffiK8sU2DJ-JXJJVyVM2kh2T87AAAAKmh0dHBzOi8vd3d3LmFwcGxlLmNvbS5jbi9zaG9wL3lvdXJzYXZlc3x8fAACAeCls5MyRoEw2dHLnX97I4UzENJd72cacqEGrXCZxKDH",
+            url: CART_LINKS.favorites,
           },
           {
             icon: "account",
             label: "账户",
-            url: "https://secure8.www.apple.com.cn/shop/signIn/account?ssi=4AAABoQHisYQBIGHNMRJcFFdMu1pQoN8KMkiqmrLqnBkltFIY_si-RoojAAAANWh0dHBzOi8vc2VjdXJlOC53d3cuYXBwbGUuY29tLmNuL3Nob3AvYWNjb3VudC9ob21lfHx8AAIBGU4nFlL6xZHuxcz41vidacTJ3RSGx--ldniK5EpN8KQ",
+            url: CART_LINKS.account,
           },
           {
             icon: "login",
             label: "登录",
-            url: "https://secure8.www.apple.com.cn/shop/signIn?ssi=4AAABoQHvKysBIEKdifhoZ7BtnnwE7nl-PymU5DxW-x0J-z57ZeIOZofTAAAAHGh0dHBzOi8vd3d3LmFwcGxlLmNvbS5jbi98fHwAAgET9eEDpww213uGnDVIs_VaTJSHN_taHhd5cZynf7hPcA",
+            url: CART_LINKS.login,
           },
         ],
       },
@@ -786,21 +792,22 @@ export default {
      * @returns {string} 完整 URL
      */
     topLink(label) {
-      const B = "https://www.apple.com.cn";
+      // prettier-ignore-start —— key 统一加引号，和下面 linkUrl 的 map 风格一致
       const map = {
-        商店: `${B}/cn/shop/goto/store`,
-        Mac: `${B}/mac/`,
-        iPad: `${B}/ipad/`,
-        iPhone: `${B}/iphone/`,
-        Watch: `${B}/watch/`,
-        Vision: `${B}/apple-vision-pro/`,
-        AirPods: `${B}/airpods/`,
-        家居: `${B}/apple-home/`,
-        娱乐: `${B}/entertainment/`,
-        配件: `${B}/cn/shop/goto/buy_accessories`,
-        技术支持: "https://support.apple.com/zh-cn/",
+        商店: SHOP.store,
+        Mac: `${APPLE}/mac/`,
+        iPad: `${APPLE}/ipad/`,
+        iPhone: `${APPLE}/iphone/`,
+        Watch: `${APPLE}/watch/`,
+        Vision: `${APPLE}/apple-vision-pro/`,
+        AirPods: `${APPLE}/airpods/`,
+        家居: `${APPLE}/apple-home/`,
+        娱乐: `${APPLE}/entertainment/`,
+        配件: SHOP.buyAccessories,
+        技术支持: SUPPORT,
       };
-      return map[label] || `${B}/`;
+      // prettier-ignore-end
+      return map[label] || `${APPLE}/`;
     },
     /**
      * 下拉菜单链接文本 -> 官网 URL 映射
@@ -809,41 +816,42 @@ export default {
      * @returns {string} 完整 URL
      */
     linkUrl(text) {
-      const B = "https://www.apple.com.cn";
-      const S = `${B}/cn/shop/goto`;
-      const SU = "https://support.apple.com/zh-cn";
+      // B=主站根, S=商店快捷入口前缀, SU=支持站
+      const B = APPLE;
+      const S = `${APPLE}/cn/shop/goto`;
+      const SU = SUPPORT;
       const map = {
         // ===== 商店下拉 =====
-        选购最新产品: `${S}/store`,
-        Mac: `${S}/buy_mac`,
-        iPhone: `${S}/buy_iphone`,
+        "选购最新产品": `${S}/store`,
+        "Mac": `${S}/buy_mac`,
+        "iPhone": `${S}/buy_iphone`,
         "Apple Watch": `${S}/buy_watch`,
         "Apple Vision Pro": `${S}/buy_vision`,
-        AirPods: `${S}/airpods/accessories`,
-        配件: `${S}/buy_accessories`,
-        查找零售店: `${B}/retail/`,
-        订单状态: `${S}/order/list`,
+        "AirPods": `${S}/airpods/accessories`,
+        "配件": `${S}/buy_accessories`,
+        "查找零售店": `${B}/retail/`,
+        "订单状态": `${S}/order/list`,
         "Apple Trade In 换购计划": `${S}/trade_in`,
-        分期付款: `${S}/ww/financing`,
-        个人设置辅导: `${S}/personal_setup`,
-        认证的翻新产品: `${S}/special_deals`,
-        教育: `${S}/educationrouting`,
-        商务: `${B}/retail/business/`,
+        "分期付款": `${S}/ww/financing`,
+        "个人设置辅导": `${S}/personal_setup`,
+        "认证的翻新产品": `${S}/special_deals`,
+        "教育": `${S}/educationrouting`,
+        "商务": `${B}/retail/business/`,
         // ===== Mac =====
         "探索全部 Mac 机型": `${B}/mac/`,
         "MacBook Neo": `${B}/macbook-neo/`,
         "MacBook Air": `${B}/macbook-air/`,
         "MacBook Pro": `${B}/macbook-pro/`,
-        iMac: `${B}/imac/`,
+        "iMac": `${B}/imac/`,
         "Mac mini": `${B}/mac-mini/`,
         "Mac Studio": `${B}/mac-studio/`,
-        显示器: `${B}/displays/`,
+        "显示器": `${B}/displays/`,
         "Mac 机型比较": `${B}/mac/compare/`,
         "从 PC 换成 Mac": `${B}/mac/mac-does-that/`,
         "选购 Mac": `${S}/buy_mac`,
         "Mac 配件": `${S}/mac/accessories`,
         "Mac 支持": `${SU}/mac`,
-        AppleCare: `${B}/applecare/`,
+        "AppleCare": `${B}/applecare/`,
         "OS 27": `${B}/os/`,
         "Apple 打造的 App": `${B}/apps/`,
         "Apple 创作坊": `${B}/apple-creator-studio/`,
@@ -855,10 +863,10 @@ export default {
         "探索全部 iPad 机型": `${B}/ipad/`,
         "iPad Pro": `${B}/ipad-pro/`,
         "iPad Air": `${B}/ipad-air/`,
-        iPad: `${B}/ipad-11/`,
+        "iPad": `${B}/ipad-11/`,
         "iPad mini": `${B}/ipad-mini/`,
         "Apple Pencil": `${B}/apple-pencil/`,
-        键盘: `${B}/ipad-keyboards/`,
+        "键盘": `${B}/ipad-keyboards/`,
         "iPad 机型比较": `${B}/ipad/compare/`,
         "选购 iPad": `${S}/buy_ipad`,
         "iPad 配件": `${S}/ipad/accessories`,
@@ -879,7 +887,7 @@ export default {
         "iPhone 隐私保护": `${B}/privacy/`,
         "配合 Mac 更好用": `${B}/macos/continuity/`,
         "Apple Pay": `${B}/apple-pay/`,
-        Siri: `${B}/siri/`,
+        "Siri": `${B}/siri/`,
         // ===== Watch =====
         "探索全部 Apple Watch 表款": `${B}/watch/`,
         "Apple Watch Series 12": `${B}/apple-watch-series-12/`,
@@ -895,10 +903,10 @@ export default {
         "Apple Watch 支持": `${SU}/watch`,
         // ===== Vision =====
         "探索 Apple Vision Pro": `${B}/apple-vision-pro/`,
-        技术规格: `${B}/apple-vision-pro/specs/`,
+        "技术规格": `${B}/apple-vision-pro/specs/`,
         "选购 Apple Vision Pro": `${S}/buy_vision`,
         "Apple Vision Pro 配件": `${S}/vision/accessories`,
-        预约演示试用: `${B}/retail/instore-shopping-session/session-selection/?topic=visionpro`,
+        "预约演示试用": `${B}/retail/instore-shopping-session/session-selection/?topic=visionpro`,
         "Apple Vision Pro 支持": `${SU}/apple-vision-pro`,
         // ===== AirPods =====
         "探索全部 AirPods 机型": `${B}/airpods/`,
@@ -913,36 +921,36 @@ export default {
         "AirPods 支持": `${SU}/airpods`,
         "Apple Music": `${B}/apple-music/`,
         // ===== 家居 =====
-        探索家居项目: `${B}/apple-home/`,
-        HomePod: `${B}/homepod-2nd-generation/`,
+        "探索家居项目": `${B}/apple-home/`,
+        "HomePod": `${B}/homepod-2nd-generation/`,
         "HomePod mini": `${B}/homepod-mini/`,
         "选购 HomePod": `${S}/buy_homepod/homepod`,
         "选购 HomePod mini": `${S}/buy_homepod/homepod_mini`,
-        家居配件: `${S}/accessories/homekit`,
+        "家居配件": `${S}/accessories/homekit`,
         "HomePod 支持": `${SU}/homepod`,
         "家庭 App": `${B}/home-app/`,
-        隔空播放: `${B}/airplay/`,
+        "隔空播放": `${B}/airplay/`,
         // ===== 娱乐 =====
-        探索娱乐内容: `${B}/services/`,
+        "探索娱乐内容": `${B}/services/`,
         "Apple 播客": `${B}/apple-podcasts/`,
         "App Store": `${B}/app-store/`,
         "Apple Music 支持": `${SU}/music`,
         // ===== 配件 =====
-        选购所有配件: `${S}/buy_accessories`,
+        "选购所有配件": `${S}/buy_accessories`,
         "来自 Apple 的配件": `${S}/accessories/all_accessories/made_by_apple`,
-        Beats: `${S}/accessories/all_accessories/beats_featured`,
-        AirTag: `${B}/airtag/`,
+        "Beats": `${S}/accessories/all_accessories/beats_featured`,
+        "AirTag": `${B}/airtag/`,
         // ===== 技术支持 =====
-        Music: `${SU}/music`,
-        探索各类技术支持: `${SU}/`,
-        社区: "https://discussionschinese.apple.com/welcome",
-        查看保修服务: "https://checkcoverage.apple.com/cn/zh",
+        "Music": `${SU}/music`,
+        "探索各类技术支持": `${SU}/`,
+        "社区": DISCUSSIONS,
+        "查看保修服务": CHECK_COVERAGE,
         "Genius Bar 天才吧": `${B}/retail/geniusbar/`,
-        维修: `${SU}/repair`,
+        "维修": `${SU}/repair`,
         "获取 AppleCare": `${B}/applecare/`,
         "Apple 账户和密码": `${SU}/apple-account`,
-        账单和订阅: `${SU}/billing`,
-        无障碍使用: `${SU}/accessibility`,
+        "账单和订阅": `${SU}/billing`,
+        "无障碍使用": `${SU}/accessibility`,
       };
       return map[text] || `${B}/`;
     },
