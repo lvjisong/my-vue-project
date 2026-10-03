@@ -2,54 +2,8 @@
   <div class="apple-home">
     <AppleNav />
 
-    <!-- Hero 0：iPhone 18 Pro -->
-    <AppleHero
-      title="iPhone 18 Pro"
-      subtitle="Pro 再超前"
-      theme="dark"
-      :image="heroIphonePro"
-      :image-mobile="heroIphoneProMobile"
-      fallback-bg="#000"
-      :parallax="0.15"
-      :links="[
-        { text: '进一步了解', type: 'primary', url: 'https://www.apple.com.cn/iphone-18-pro/' },
-        { text: '购买', type: 'outline', url: 'https://www.apple.com.cn/cn/shop/goto/buy_iphone/iphone_18_pro' },
-      ]"
-    />
-
-    <!-- Hero 1：iPhone Duo -->
-    <AppleHero
-      title="iPhone Duo"
-      subtitle="Hello, hello。"
-      theme="light"
-      :image="heroDuo"
-      :image-mobile="heroDuoMobile"
-      fallback-bg="#f5f5f7"
-      content-position="top"
-      :info-lines="['10 月 16 日晚 8 点接受预购', '10 月 23 日发售']"
-      :parallax="0.12"
-      :links="[
-        { text: '进一步了解', type: 'primary', url: 'https://www.apple.com.cn/iphone-duo/' },
-        { text: '查看价格', type: 'outline', url: 'https://www.apple.com.cn/cn/shop/goto/buy_iphone/iphone_duo' },
-      ]"
-    />
-
-    <!-- Hero 2：Apple Watch Series 12 -->
-    <AppleHero
-      title="WATCH SERIES 12"
-      subtitle="拥有 Apple Watch 迄今最先进的心率感测技术"
-      theme="dark"
-      :image="heroWatch"
-      :image-mobile="heroWatchMobile"
-      fallback-bg="#000"
-      show-logo
-      content-position="bottom"
-      :parallax="0.15"
-      :links="[
-        { text: '进一步了解', type: 'primary', url: 'https://www.apple.com.cn/apple-watch-series-12/' },
-        { text: '购买', type: 'outline', url: 'https://www.apple.com.cn/cn/shop/goto/buy_watch/apple_watch_series_12' },
-      ]"
-    />
+    <!-- Hero 横幅（数组循环渲染） -->
+    <AppleHero v-for="hero in heroes" :key="hero.title" v-bind="hero" />
 
     <!-- 双列磁贴 -->
     <AppleTileGrid :tiles="tiles" />
@@ -63,7 +17,7 @@
  * AppleHome.vue —— apple.com.cn 首页复刻（组装入口）
  *
  * 页面结构（自上而下）：
- *   1. AppleNav        顶部导航（PC 毛玻璃 + 下拉，移动端汉堡全屏菜单）
+ *   1. AppleNav       顶部导航（PC 毛玻璃 + 下拉，移动端汉堡全屏菜单）
  *   2. AppleHero × 3  首屏大横幅（iPhone 18 Pro / iPhone Duo / Watch S12）
  *   3. AppleTileGrid  下方双列（移动端单列）磁贴 promo 区
  *   4. AppleFooter    页脚
@@ -92,12 +46,46 @@ export default {
   components: { AppleNav, AppleHero, AppleTileGrid, AppleFooter },
   data() {
     return {
-      heroIphonePro: `https://www.apple.com.cn/v/homepage/images/iphone-18-pro/a/hero_iphone_18_pro__fqe1motd0ymy_largetall_2x.jpg`,
-      heroIphoneProMobile: `https://www.apple.com.cn/v/homepage/images/iphone-18-pro/a/hero_iphone_18_pro__fqe1motd0ymy_small_2x.jpg`,
-      heroDuo: `${CDN}/homepage/built/heroes/iphone-duo/images/hero_iphone_duo_announce__fh4u8yzndpe2_largetall_2x.jpg`,
-      heroDuoMobile: `${CDN}/homepage/built/heroes/iphone-duo/images/hero_iphone_duo_announce__fh4u8yzndpe2_small_2x.jpg`,
-      heroWatch: `${CDN}/homepage/built/heroes/apple-watch-series-12/images/hero_apple_watch_series_12__n9rln7bzvwya_largetall_2x.jpg`,
-      heroWatchMobile: `${CDN}/homepage/built/heroes/apple-watch-series-12/images/hero_apple_watch_series_12__n9rln7bzvwya_small_2x.jpg`,
+      /**
+       * Hero 横幅配置数组（按官网首页顺序）
+       * 字段同 AppleHero props：title/subtitle/theme/image/imageMobile/fallbackBg/
+       *   showLogo/contentPosition/infoLines/links/parallax
+       */
+      heroes: [
+        {
+          title: 'iPhone 18 Pro', subtitle: 'Pro 再超前', theme: 'dark',
+          image: `${CDN}/v/homepage/images/iphone-18-pro/a/hero_iphone_18_pro__fqe1motd0ymy_largetall_2x.jpg`,
+          imageMobile: `${CDN}/v/homepage/images/iphone-18-pro/a/hero_iphone_18_pro__fqe1motd0ymy_small_2x.jpg`,
+          fallbackBg: '#000', parallax: 0.15,
+          links: [
+            { text: '进一步了解', type: 'primary', url: `${CDN}/iphone-18-pro/` },
+            { text: '购买', type: 'outline', url: `${CDN}/cn/shop/goto/buy_iphone/iphone_18_pro` },
+          ],
+        },
+        {
+          title: 'iPhone Duo', subtitle: 'Hello, hello。', theme: 'light',
+          image: `${CDN}/homepage/built/heroes/iphone-duo/images/hero_iphone_duo_announce__fh4u8yzndpe2_largetall_2x.jpg`,
+          imageMobile: `${CDN}/homepage/built/heroes/iphone-duo/images/hero_iphone_duo_announce__fh4u8yzndpe2_small_2x.jpg`,
+          fallbackBg: '#f5f5f7', contentPosition: 'top', parallax: 0.12,
+          infoLines: ['10 月 16 日晚 8 点接受预购', '10 月 23 日发售'],
+          links: [
+            { text: '进一步了解', type: 'primary', url: `${CDN}/iphone-duo/` },
+            { text: '查看价格', type: 'outline', url: `${CDN}/cn/shop/goto/buy_iphone/iphone_duo` },
+          ],
+        },
+        {
+          title: 'WATCH SERIES 12',
+          subtitle: '拥有 Apple Watch 迄今最先进的心率感测技术',
+          theme: 'dark', showLogo: true, contentPosition: 'bottom',
+          image: `${CDN}/homepage/built/heroes/apple-watch-series-12/images/hero_apple_watch_series_12__n9rln7bzvwya_largetall_2x.jpg`,
+          imageMobile: `${CDN}/homepage/built/heroes/apple-watch-series-12/images/hero_apple_watch_series_12__n9rln7bzvwya_small_2x.jpg`,
+          fallbackBg: '#000', parallax: 0.15,
+          links: [
+            { text: '进一步了解', type: 'primary', url: `${CDN}/apple-watch-series-12/` },
+            { text: '购买', type: 'outline', url: `${CDN}/cn/shop/goto/buy_watch/apple_watch_series_12` },
+          ],
+        },
+      ],
       /**
        * 磁贴（promo）配置数组
        * 字段说明：
