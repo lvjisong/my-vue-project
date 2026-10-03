@@ -38,7 +38,7 @@ function getRefreshToken() {
 }
 
 /** 写入新 token（登录成功时由 auth.setToken 处理） */
-function setTokens(accessToken, refreshToken) {
+function setTokens(accessToken) {
   auth.setToken(accessToken);
 }
 
@@ -83,7 +83,7 @@ async function requestNewToken() {
   if (!payload || !payload.token) {
     throw new Error("刷新 token 响应结构异常");
   }
-  setTokens(payload.token, payload.refresh_token || getRefreshToken());
+  setTokens(payload.token);
   return payload.token;
 }
 

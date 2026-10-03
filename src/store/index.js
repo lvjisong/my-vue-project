@@ -7,6 +7,10 @@
  */
 import Vue from "vue";
 import Vuex from "vuex";
+// axios：当前 fetchUser/logout 还是 mock 实现，没真正发请求。
+// 这行 import 故意留着（eslint-disable 压 unused 警告），接后端后直接在
+// actions 里 await axios.get('/api/user/me') 即可，不用再补 import。
+// eslint-disable-next-line no-unused-vars
 import axios from "axios";
 
 Vue.use(Vuex);
@@ -52,7 +56,7 @@ export default new Vuex.Store({
      *     }
      *   },
      */
-    async fetchUser({ commit }) {
+    async fetchUser() {
       console.log("fetchUser action called, but no backend API is connected.");
     },
 

@@ -9,7 +9,7 @@
 <script>
 import auth from "@/utils/auth";
 export default {
-  name: "Login",
+  name: "LoginPage",
   methods: {
     fakeLogin() {
       // TODO-AUTH-LOGIN: 接后端前现在这样：假 token，写个随机数

@@ -25,7 +25,7 @@
 import { getCartList } from "@/api";
 
 export default {
-  name: "Cart",
+  name: "CartPage",
   data() {
     return {
       loading: false,

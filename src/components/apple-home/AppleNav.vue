@@ -4,7 +4,7 @@
     <!-- hover 导航下拉 / PC 购物袋下拉 共用；点击幕布收起 -->
     <transition name="curtain">
       <div
-        v-show="showPanel || cartOpen"
+        v-show="showPanel"
         class="apple-nav__curtain"
         @click="closeOverlay"
       ></div>
@@ -13,20 +13,20 @@
     <header
       class="apple-nav"
       :class="{
-        'is-open':
-          (activeIndex > -1 && !isClosing) || cartOpen,
-        'is-closing': isClosing || cartClosing,
+        'is-open': showPanel && !isClosing,
+        'is-closing': isClosing,
       }"
       @mouseleave="scheduleClose"
     >
       <div class="apple-nav__inner">
-        <!-- Apple Logo（官网 SVG） -->
+        <!-- Apple Logo（官网 SVG）：hover 时收起下拉面板 -->
         <a
           class="apple-nav__logo"
           href="https://www.apple.com.cn/"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Apple"
+          @mouseenter="scheduleClose"
         >
           <svg height="44" viewBox="0 0 14 44" width="14" aria-hidden="true">
             <path
@@ -59,6 +59,7 @@
             target="_blank"
             rel="noopener noreferrer"
             aria-label="搜索"
+            @mouseenter="scheduleClose"
           >
             <svg height="44" viewBox="0 0 15 44" width="15" aria-hidden="true">
               <path
@@ -80,7 +81,7 @@
           </button>
           <button
             class="apple-nav__hamburger"
-            @click="mobileOpen = !mobileOpen"
+            @click="onHamburgerClick"
             aria-label="菜单"
           >
             <span></span><span></span>
@@ -88,15 +89,17 @@
         </div>
       </div>
 
-      <!-- PC端导航条下拉面板（hover触发，复用 flyout 动画） -->
+      <!-- PC端下拉面板（hover 导航 / 购物袋共用，按 panelMode 切换内容） -->
       <transition name="flyout" @after-leave="afterLeave">
         <div
           v-show="showPanel"
           class="apple-nav__flyout"
+          :class="{ 'apple-nav__flyout--cart': panelMode === 'cart' }"
           @mouseenter="cancelClose"
           @mouseleave="scheduleClose"
         >
-          <div class="apple-nav__flyout-inner">
+          <!-- 导航下拉内容 -->
+          <div v-if="panelMode === 'nav'" class="apple-nav__flyout-inner">
             <div
               v-for="(col, gi) in dropColumns"
               :key="col.heading"
@@ -143,94 +146,95 @@
               >
             </div>
           </div>
-        </div>
-      </transition>
 
-      <!-- PC端购物袋下拉面板（点击触发，复用 flyout 动画） -->
-      <transition name="flyout" :css="!cartInstant" @after-leave="afterCartLeave">
-        <div
-          v-show="cartOpen"
-          class="apple-nav__flyout apple-nav__flyout--cart"
-          @click.stop
-          @mouseenter="cancelClose"
-          @mouseleave="scheduleClose"
-        >
-          <div class="apple-nav__cart">
-            <p class="apple-nav__cart-title">你的购物袋是空的。</p>
+          <!-- 购物袋内容 -->
+          <div v-else class="apple-nav__cart">
+            <p class="apple-nav__cart-title">{{ cartMenu.title }}</p>
             <p class="apple-nav__cart-sub">
               <a
-                href="https://secure8.www.apple.com.cn/shop/signIn?ssi=4AAABoQG73tUBIBmGXTMK5Q6yQ2mAYX9IMGqUGU5SSFf7GKjmyy1eUY3ZAAAAHGh0dHBzOi8vd3d3LmFwcGxlLmNvbS5jbi98fHwAAgEjLnSNMilLOoDhP2AYl0EBboujTCt3Bqr0VWHvfONqUg"
+                :href="cartMenu.sub.linkUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                >登录</a
-              >查看你是否有收藏商品
+                >{{ cartMenu.sub.linkText }}</a
+              >{{ cartMenu.sub.text }}
             </p>
-            <p class="apple-nav__cart-heading">个人资料</p>
+            <p class="apple-nav__cart-heading">{{ cartMenu.heading }}</p>
             <a
+              v-for="link in cartMenu.links"
+              :key="link.label"
               class="apple-nav__cart-link"
-              href="https://www.apple.com.cn/shop/order/list"
+              :href="link.url"
               target="_blank"
               rel="noopener noreferrer"
-              @click="cartOpen = false"
+              @click="showPanel = false"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <svg
+                v-if="link.icon === 'order'"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
                 <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
                 <line x1="12" y1="22.08" x2="12" y2="12"/>
               </svg>
-              订单
-            </a>
-            <a
-              class="apple-nav__cart-link"
-              href="https://secure8.www.apple.com.cn/shop/signIn?ssi=4AAABoQHOZaQBIN96jEzWUZEr_RzGMuffiK8sU2DJ-JXJJVyVM2kh2T87AAAAKmh0dHBzOi8vd3d3LmFwcGxlLmNvbS5jbi9zaG9wL3lvdXJzYXZlc3x8fAACAeCls5MyRoEw2dHLnX97I4UzENJd72cacqEGrXCZxKDH"
-              target="_blank"
-              rel="noopener noreferrer"
-              @click="cartOpen = false"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <svg
+                v-else-if="link.icon === 'favorites'"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
                 <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
               </svg>
-              你的收藏
-            </a>
-            <a
-              class="apple-nav__cart-link"
-              href="https://secure8.www.apple.com.cn/shop/signIn/account?ssi=4AAABoQHisYQBIGHNMRJcFFdMu1pQoN8KMkiqmrLqnBkltFIY_si-RoojAAAANWh0dHBzOi8vc2VjdXJlOC53d3cuYXBwbGUuY29tLmNuL3Nob3AvYWNjb3VudC9ob21lfHx8AAIBGU4nFlL6xZHuxcz41vidacTJ3RSGx--ldniK5EpN8KQ"
-              target="_blank"
-              rel="noopener noreferrer"
-              @click="cartOpen = false"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <svg
+                v-else-if="link.icon === 'account'"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
                 <circle cx="12" cy="12" r="3"/>
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
               </svg>
-              账户
-            </a>
-            <a
-              class="apple-nav__cart-link"
-              href="https://secure8.www.apple.com.cn/shop/signIn?ssi=4AAABoQHvKysBIEKdifhoZ7BtnnwE7nl-PymU5DxW-x0J-z57ZeIOZofTAAAAHGh0dHBzOi8vd3d3LmFwcGxlLmNvbS5jbi98fHwAAgET9eEDpww213uGnDVIs_VaTJSHN_taHhd5cZynf7hPcA"
-              target="_blank"
-              rel="noopener noreferrer"
-              @click="cartOpen = false"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <svg
+                v-else-if="link.icon === 'login'"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
               </svg>
-              登录
+              {{ link.label }}
             </a>
           </div>
         </div>
       </transition>
     </header>
     
-    <!-- 移动端导航条全屏菜单（root 级，避免被 header 裁剪） -->
+    <!-- 移动端全屏面板（root 级，汉堡菜单 / 购物袋共用，按 mobileMode 切换内容） -->
     <transition name="mobile-fade">
       <div
         v-show="mobileOpen"
         class="apple-nav__mobile"
-        :class="{ 'is-closing': mobileClosing }"
+        :class="{
+          'is-closing': mobileClosing,
+          'apple-nav__mobile--cart': mobileMode === 'cart',
+        }"
       >
-        <template v-if="mobileIndex === -1">
+        <!-- ===== 购物袋内容 ===== -->
+        <template v-if="mobileMode === 'cart'">
           <button
             class="apple-nav__mobile-close"
             @click="closeMobile"
@@ -242,142 +246,145 @@
               />
             </svg>
           </button>
-          <nav class="apple-nav__mobile-list">
-            <a
-              v-for="(item, index) in menus"
-              :key="item.label"
-              class="apple-nav__mobile-top"
-              @click="mobileIndex = index"
-              >{{ item.label }}</a
-            >
-          </nav>
-        </template>
-        <template v-else>
-          <button
-            class="apple-nav__mobile-back"
-            @click="mobileIndex = -1"
-            aria-label="返回"
-          >
-            <svg width="12" height="20" viewBox="0 0 12 20" fill="currentColor">
-              <path d="M10.3 18.7L2 10l8.3-8.7-1.4-1.4L-.7 10l12 10.1z" />
-            </svg>
-          </button>
-          <button
-            class="apple-nav__mobile-close"
-            @click="closeMobile"
-            aria-label="关闭"
-          >
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
-              <path
-                d="M17.3 1.3L16 .01 9 7.01 2 .01.7 1.3 7.7 8.3.7 15.3l1.3 1.3L9 9.6l7 7 1.3-1.3-7-7z"
-              />
-            </svg>
-          </button>
-          <nav class="apple-nav__mobile-sub">
-            <template v-for="(col, ci) in menus[mobileIndex].columns">
-              <p v-if="ci === 0" class="apple-nav__mobile-heading">
-                {{ col.heading }}
-              </p>
+          <div class="apple-nav__cart-mobile">
+            <p class="apple-nav__cart-title">{{ cartMenu.title }}</p>
+            <p class="apple-nav__cart-sub">
               <a
-                v-for="l in col.links"
-                :key="l"
-                :href="topLink(l)"
+                :href="cartMenu.sub.linkUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                @click="mobileOpen = false"
-                >{{ l }}</a
-              >
-              <p v-if="ci > 0" class="apple-nav__mobile-heading">
-                {{ col.heading }}
-              </p>
-            </template>
-          </nav>
-        </template>
-      </div>
-    </transition>
-
-    <!-- 移动端购物袋全屏面板（root 级，和汉堡菜单同级，互斥） -->
-    <transition name="mobile-fade">
-      <div
-        v-show="cartMobileOpen"
-        class="apple-nav__mobile apple-nav__mobile--cart"
-        :class="{ 'is-closing': cartMobileClosing }"
-      >
-        <button
-          class="apple-nav__mobile-close"
-          @click="closeCartMobile"
-          aria-label="关闭"
-        >
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
-            <path
-              d="M17.3 1.3L16 .01 9 7.01 2 .01.7 1.3 7.7 8.3.7 15.3l1.3 1.3L9 9.6l7 7 1.3-1.3-7-7z"
-            />
-          </svg>
-        </button>
-        <div class="apple-nav__cart-mobile">
-          <p class="apple-nav__cart-title">你的购物袋是空的。</p>
-          <p class="apple-nav__cart-sub">
+                >{{ cartMenu.sub.linkText }}</a
+              >{{ cartMenu.sub.text }}
+            </p>
+            <p class="apple-nav__cart-heading">{{ cartMenu.heading }}</p>
             <a
-              href="https://secure8.www.apple.com.cn/shop/signIn?ssi=4AAABoQG73tUBIBmGXTMK5Q6yQ2mAYX9IMGqUGU5SSFf7GKjmyy1eUY3ZAAAAHGh0dHBzOi8vd3d3LmFwcGxlLmNvbS5jbi98fHwAAgEjLnSNMilLOoDhP2AYl0EBboujTCt3Bqr0VWHvfONqUg"
+              v-for="link in cartMenu.links"
+              :key="link.label"
+              class="apple-nav__cart-link"
+              :href="link.url"
               target="_blank"
               rel="noopener noreferrer"
-              >登录</a
-            >查看你是否有收藏商品
-          </p>
-          <p class="apple-nav__cart-heading">个人资料</p>
-          <a
-            class="apple-nav__cart-link"
-            href="https://www.apple.com.cn/shop/order/list"
-            target="_blank"
-            rel="noopener noreferrer"
-            @click="cartMobileOpen = false"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-              <line x1="12" y1="22.08" x2="12" y2="12"/>
-            </svg>
-            订单
-          </a>
-          <a
-            class="apple-nav__cart-link"
-            href="https://secure8.www.apple.com.cn/shop/signIn?ssi=4AAABoQHOZaQBIN96jEzWUZEr_RzGMuffiK8sU2DJ-JXJJVyVM2kh2T87AAAAKmh0dHBzOi8vd3d3LmFwcGxlLmNvbS5jbi9zaG9wL3lvdXJzYXZlc3x8fAACAeCls5MyRoEw2dHLnX97I4UzENJd72cacqEGrXCZxKDH"
-            target="_blank"
-            rel="noopener noreferrer"
-            @click="cartMobileOpen = false"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
-            </svg>
-            你的收藏
-          </a>
-          <a
-            class="apple-nav__cart-link"
-            href="https://secure8.www.apple.com.cn/shop/signIn/account?ssi=4AAABoQHisYQBIGHNMRJcFFdMu1pQoN8KMkiqmrLqnBkltFIY_si-RoojAAAANWh0dHBzOi8vc2VjdXJlOC53d3cuYXBwbGUuY29tLmNuL3Nob3AvYWNjb3VudC9ob21lfHx8AAIBGU4nFlL6xZHuxcz41vidacTJ3RSGx--ldniK5EpN8KQ"
-            target="_blank"
-            rel="noopener noreferrer"
-            @click="cartMobileOpen = false"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <circle cx="12" cy="12" r="3"/>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-            </svg>
-            账户
-          </a>
-          <a
-            class="apple-nav__cart-link"
-            href="https://secure8.www.apple.com.cn/shop/signIn?ssi=4AAABoQHvKysBIEKdifhoZ7BtnnwE7nl-PymU5DxW-x0J-z57ZeIOZofTAAAAHGh0dHBzOi8vd3d3LmFwcGxlLmNvbS5jbi98fHwAAgET9eEDpww213uGnDVIs_VaTJSHN_taHhd5cZynf7hPcA"
-            target="_blank"
-            rel="noopener noreferrer"
-            @click="cartMobileOpen = false"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
-            登录
-          </a>
-        </div>
+              @click="mobileOpen = false"
+            >
+              <svg
+                v-if="link.icon === 'order'"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              </svg>
+              <svg
+                v-else-if="link.icon === 'favorites'"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+              </svg>
+              <svg
+                v-else-if="link.icon === 'account'"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+              <svg
+                v-else-if="link.icon === 'login'"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              {{ link.label }}
+            </a>
+          </div>
+        </template>
+
+        <!-- ===== 汉堡导航内容 ===== -->
+        <template v-else>
+          <template v-if="mobileIndex === -1">
+            <button
+              class="apple-nav__mobile-close"
+              @click="closeMobile"
+              aria-label="关闭"
+            >
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+                <path
+                  d="M17.3 1.3L16 .01 9 7.01 2 .01.7 1.3 7.7 8.3.7 15.3l1.3 1.3L9 9.6l7 7 1.3-1.3-7-7z"
+                />
+              </svg>
+            </button>
+            <nav class="apple-nav__mobile-list">
+              <a
+                v-for="(item, index) in menus"
+                :key="item.label"
+                class="apple-nav__mobile-top"
+                @click="mobileIndex = index"
+                >{{ item.label }}</a
+              >
+            </nav>
+          </template>
+          <template v-else>
+            <button
+              class="apple-nav__mobile-back"
+              @click="mobileIndex = -1"
+              aria-label="返回"
+            >
+              <svg width="12" height="20" viewBox="0 0 12 20" fill="currentColor">
+                <path d="M10.3 18.7L2 10l8.3-8.7-1.4-1.4L-.7 10l12 10.1z" />
+              </svg>
+            </button>
+            <button
+              class="apple-nav__mobile-close"
+              @click="closeMobile"
+              aria-label="关闭"
+            >
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+                <path
+                  d="M17.3 1.3L16 .01 9 7.01 2 .01.7 1.3 7.7 8.3.7 15.3l1.3 1.3L9 9.6l7 7 1.3-1.3-7-7z"
+                />
+              </svg>
+            </button>
+            <nav class="apple-nav__mobile-sub">
+              <template v-for="(col, ci) in menus[mobileIndex].columns">
+                <p v-if="ci === 0" :key="'h-' + ci" class="apple-nav__mobile-heading">
+                  {{ col.heading }}
+                </p>
+                <a
+                  v-for="l in col.links"
+                  :key="l"
+                  :href="topLink(l)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  @click="mobileOpen = false"
+                  >{{ l }}</a
+                >
+                <p v-if="ci > 0" :key="'h-' + ci" class="apple-nav__mobile-heading">
+                  {{ col.heading }}
+                </p>
+              </template>
+            </nav>
+          </template>
+        </template>
       </div>
     </transition>
   </div>
@@ -401,14 +408,14 @@
  *   - 关闭时先隐藏内容（is-closing），面板再 scaleY 上收
  *
  * 购物袋（点击触发，非 hover）：
- *   - PC：点购物袋图标展开和 hover 下拉同位置的 flyout（深色，内容左对齐）
- *       · hover 其他导航项时无缝替换（cartInstant 临时禁用购物袋 flyout 的收起动画）
+ *   - PC：点购物袋图标在同一个 flyout 里切换到购物袋内容（深色，内容左对齐）
+ *       · hover 其他导航项时直接换内容（同一个 flyout，无残影）
  *       · 再 hover 回购物袋图标则关闭面板
- *   - 移动端：点购物袋图标弹出与汉堡菜单同级的全屏面板（root 级，互斥）
+ *   - 移动端：点购物袋图标在同一个全屏面板里切换到购物袋内容
  *
  * 互斥规则：
- *   - hover 下拉 / PC 购物袋 flyout 共用 curtain 幕布，同一时刻只显示一个
- *   - 移动端汉堡菜单 / 购物袋全屏面板同一时刻只显示一个
+ *   - PC：导航 hover / 购物袋共用一个 flyout + 一个 curtain
+ *   - 移动端：汉堡菜单 / 购物袋共用一个全屏面板
  *
  * 数据：menus 数组为官网抓取的三列分类结构；topLink(label) 映射一级项到官网 URL
  */
@@ -416,27 +423,57 @@ export default {
   name: "AppleNav",
   data() {
     return {
-      // ===== PC hover 下拉面板状态 =====
-      activeIndex: -1,   // 当前 hover 的一级项下标，-1 表示无
-      showPanel: false,  // hover 下拉面板是否可见
+      // ===== PC hover 下拉面板状态（导航 / 购物袋共用一个 flyout）=====
+      activeIndex: -1,   // 当前 hover 的导航项下标，-1 表示无（仅 nav 模式用）
+      showPanel: false,  // flyout 是否可见
+      panelMode: "nav",  // 'nav' 三列导航 | 'cart' 购物袋
       isClosing: false,  // 关闭动画中（内容先消失，面板再上收）
 
-      // ===== 移动端汉堡菜单状态 =====
-      mobileOpen: false,      // 汉堡全屏面板是否可见
-      mobileIndex: -1,        // 当前进入的二级分类下标，-1 表示一级列表
-      mobileClosing: false,   // 汉堡面板关闭动画中
-
-      // ===== 购物袋：PC 下拉面板（点击触发）=====
-      cartOpen: false,        // 购物袋 flyout 是否可见
-      cartClosing: false,     // 购物袋 flyout 关闭动画中
-      cartInstant: false,     // 切换到其他导航时临时禁用购物袋 flyout 的收起动画（避免残影）
-
-      // ===== 购物袋：移动端全屏面板 =====
-      cartMobileOpen: false,
-      cartMobileClosing: false,
+      // ===== 移动端全屏面板状态（汉堡菜单 / 购物袋共用一个面板）=====
+      mobileOpen: false,        // 全屏面板是否可见
+      mobileMode: "menu",      // 当前面板内容：'menu' 汉堡导航 | 'cart' 购物袋
+      mobileIndex: -1,         // 汉堡二级分类下标，-1 表示一级列表（仅 menu 模式用）
+      mobileClosing: false,    // 面板关闭动画中
 
       // ===== 共享 =====
       closeTimer: null, // 鼠标移出后延迟关闭面板的 setTimeout 句柄
+
+      /**
+       * 购物袋下拉面板内容（PC flyout 与移动端全屏面板共用一份数据）
+       * links[].icon 用于在模板里匹配对应 SVG 图标：order / favorites / account / login
+       */
+      cartMenu: {
+        title: "你的购物袋是空的。",
+        sub: {
+          linkText: "登录",
+          linkUrl:
+            "https://secure8.www.apple.com.cn/shop/signIn?ssi=4AAABoQG73tUBIBmGXTMK5Q6yQ2mAYX9IMGqUGU5SSFf7GKjmyy1eUY3ZAAAAHGh0dHBzOi8vd3d3LmFwcGxlLmNvbS5jbi98fHwAAgEjLnSNMilLOoDhP2AYl0EBboujTCt3Bqr0VWHvfONqUg",
+          text: "查看你是否有收藏商品",
+        },
+        heading: "个人资料",
+        links: [
+          {
+            icon: "order",
+            label: "订单",
+            url: "https://www.apple.com.cn/shop/order/list",
+          },
+          {
+            icon: "favorites",
+            label: "你的收藏",
+            url: "https://secure8.www.apple.com.cn/shop/signIn?ssi=4AAABoQHOZaQBIN96jEzWUZEr_RzGMuffiK8sU2DJ-JXJJVyVM2kh2T87AAAAKmh0dHBzOi8vd3d3LmFwcGxlLmNvbS5jbi9zaG9wL3lvdXJzYXZlc3x8fAACAeCls5MyRoEw2dHLnX97I4UzENJd72cacqEGrXCZxKDH",
+          },
+          {
+            icon: "account",
+            label: "账户",
+            url: "https://secure8.www.apple.com.cn/shop/signIn/account?ssi=4AAABoQHisYQBIGHNMRJcFFdMu1pQoN8KMkiqmrLqnBkltFIY_si-RoojAAAANWh0dHBzOi8vc2VjdXJlOC53d3cuYXBwbGUuY29tLmNuL3Nob3AvYWNjb3VudC9ob21lfHx8AAIBGU4nFlL6xZHuxcz41vidacTJ3RSGx--ldniK5EpN8KQ",
+          },
+          {
+            icon: "login",
+            label: "登录",
+            url: "https://secure8.www.apple.com.cn/shop/signIn?ssi=4AAABoQHvKysBIEKdifhoZ7BtnnwE7nl-PymU5DxW-x0J-z57ZeIOZofTAAAAHGh0dHBzOi8vd3d3LmFwcGxlLmNvbS5jbi98fHwAAgET9eEDpww213uGnDVIs_VaTJSHN_taHhd5cZynf7hPcA",
+          },
+        ],
+      },
 
       menus: [
         {
@@ -839,7 +876,6 @@ export default {
         // ===== 商店下拉 =====
         选购最新产品: `${S}/store`,
         Mac: `${S}/buy_mac`,
-        iPad: `${S}/buy_ipad`,
         iPhone: `${S}/buy_iphone`,
         "Apple Watch": `${S}/buy_watch`,
         "Apple Vision Pro": `${S}/buy_vision`,
@@ -981,16 +1017,8 @@ export default {
     openMenu(index) {
       clearTimeout(this.closeTimer);
       this.isClosing = false;
-      // 购物袋面板是点击展开的；hover 到其他导航项时直接替换为该导航面板，
-      // 购物袋 flyout 跳过收起动画（cartInstant 临时禁用 transition CSS），避免残影
-      if (this.cartOpen) {
-        this.cartInstant = true;
-        this.cartClosing = true;
-        this.cartOpen = false;
-        this.$nextTick(() => {
-          this.cartInstant = false;
-        });
-      }
+      // 同一个 flyout，内容直接从购物袋切到导航，无残影
+      this.panelMode = "nav";
       this.activeIndex = index;
       this.showPanel = true;
     },
@@ -1000,23 +1028,20 @@ export default {
       this.closeTimer = setTimeout(() => {
         this.isClosing = true;
         this.showPanel = false;
-        // 购物袋面板若开着，一并收起
-        if (this.cartOpen) {
-          this.cartClosing = true;
-          this.cartOpen = false;
-        }
       }, 200);
     },
     /**
      * 鼠标 hover 到购物袋图标：
      * - 购物袋面板本身是 click 触发（不是 hover），hover 不重新打开
      * - 若购物袋面板开着 → 直接关闭
-     * - 若当前展开的是其他导航 hover 面板 → 启动关闭计时（等同离开导航栏）
+     * - 若当前展开的是导航 hover 面板 → 启动关闭计时（等同离开导航栏）
      */
     onCartIconHover() {
-      if (this.cartOpen) {
-        this.closeCartDesktop();
-      } else if (this.showPanel) {
+      if (this.showPanel && this.panelMode === "cart") {
+        clearTimeout(this.closeTimer);
+        this.isClosing = true;
+        this.showPanel = false;
+      } else if (this.showPanel && this.panelMode === "nav") {
         this.scheduleClose();
       }
     },
@@ -1030,63 +1055,61 @@ export default {
       this.isClosing = false;
     },
     /**
+     * 点击 header 上的汉堡图标：
+     * - 面板关着 → 打开汉堡导航
+     * - 购物袋面板开着 → 切回汉堡导航
+     * - 汉堡面板开着 → 直接关闭（和原 mobileOpen=!mobileOpen 行为一致）
+     */
+    onHamburgerClick() {
+      if (!this.mobileOpen) {
+        this.mobileMode = "menu";
+        this.mobileIndex = -1;
+        this.mobileOpen = true;
+      } else if (this.mobileMode === "cart") {
+        // 购物袋开着时点汉堡：切到菜单，不做关闭动画
+        this.mobileMode = "menu";
+        this.mobileIndex = -1;
+      } else {
+        // 菜单开着时点汉堡：直接关闭（无动画，和原行为一致）
+        this.mobileOpen = false;
+      }
+    },
+    /**
      * 点击购物袋图标：按视口宽度分发到 PC 下拉 / 移动端全屏
-     * - PC：和 hover 导航下拉互斥；移动端：和汉堡菜单互斥
+     * - PC：和 hover 导航共用一个 flyout，按 panelMode 切换内容
+     * - 移动端：和汉堡菜单共用一个全屏面板
      */
     toggleCart() {
       const isMobile = window.matchMedia("(max-width: 734px)").matches;
       if (isMobile) {
-        if (this.cartMobileOpen) {
-          this.closeCartMobile();
+        if (this.mobileOpen && this.mobileMode === "cart") {
+          // 购物袋面板已开 → 带动画关闭
+          this.closeMobile();
         } else {
-          // 打开前先关掉汉堡菜单（若开着），保证两者互斥
-          if (this.mobileOpen) this.closeMobile();
-          this.cartMobileOpen = true;
+          // 切到购物袋内容（面板本来开着就直接切，关着就打开）
+          this.mobileMode = "cart";
+          this.mobileIndex = -1;
+          this.mobileOpen = true;
         }
       } else {
-        if (this.cartOpen) {
-          this.closeCartDesktop();
+        if (this.showPanel && this.panelMode === "cart") {
+          // 购物袋面板已开 → 关闭
+          clearTimeout(this.closeTimer);
+          this.isClosing = true;
+          this.showPanel = false;
         } else {
-          // 打开前先收起 hover 导航下拉（若开着），共用 curtain
-          if (this.showPanel) {
-            this.isClosing = true;
-            this.showPanel = false;
-          }
-          this.cartOpen = true;
+          // 切到购物袋内容（面板本来开着就直接换内容，关着就打开）
+          this.isClosing = false;
+          this.panelMode = "cart";
+          this.showPanel = true;
         }
       }
     },
-    /** 关闭 PC 购物袋下拉：先标记 closing 立即隐藏内容，面板再上收 */
-    closeCartDesktop() {
-      clearTimeout(this.closeTimer);
-      this.cartClosing = true;
-      this.cartOpen = false;
-    },
-    /** PC 购物袋 flyout 收起动画结束后复位 */
-    afterCartLeave() {
-      this.cartClosing = false;
-    },
-    /** 关闭移动端购物袋全屏：流程与 closeMobile 一致 */
-    closeCartMobile() {
-      this.cartMobileClosing = true;
-      this.$nextTick(() => {
-        setTimeout(() => {
-          this.cartMobileOpen = false;
-        }, 20);
-      });
-      setTimeout(() => {
-        this.cartMobileClosing = false;
-      }, 400);
-    },
-    /** 点击暗色幕布：同时收起 hover 下拉和 PC 购物袋下拉 */
+    /** 点击暗色幕布：收起下拉面板 */
     closeOverlay() {
       if (this.showPanel) {
         this.isClosing = true;
         this.showPanel = false;
-      }
-      if (this.cartOpen) {
-        this.cartClosing = true;
-        this.cartOpen = false;
       }
     },
   },
