@@ -1,0 +1,55 @@
+/**
+ * theme.scss —— 全局主题变量（跟随系统深浅色）
+ *
+ * 用法：
+ *   1. 在 main.js 或 App.vue 里 @import 一次本文件
+ *   2. 组件里直接用 var(--xxx)，例如 color: var(--text-secondary);
+ *   3. 浏览器会根据系统 prefers-color-scheme 自动切换，无需 JS
+ *
+ * 当前仅 AppleFooter 使用了本文件变量；其他组件如需深色模式，
+ * 把硬编码颜色替换成对应变量即可，例如：
+ *   #1d1d1f → var(--text-primary)
+ *   #6e6e73 → var(--text-secondary)
+ *   #f5f5f7 → var(--bg-page)
+ *   #d2d2d7 → var(--border)
+ *   #0071e3 → var(--link) （两色通用，不用改）
+ *
+ * 新增颜色时，先在 :root 定义浅色值，再在 dark 块里覆盖深色值。
+ */
+
+:root {
+  /* 背景 */
+  --bg-page: #f5f5f7;       /* 页面/页脚底色 */
+  --bg-card: #fff;          /* 卡片底色 */
+
+  /* 文字 */
+  --text-primary: #1d1d1f;  /* 主标题/重要文字 */
+  --text-secondary: #6e6e73; /* 次要说明/法律小字 */
+  --text-link: #424245;     /* 普通链接 */
+  --text-link-hover: #1d1d1f;
+
+  /* 分隔线 */
+  --border: #d2d2d7;
+
+  /* 强调色（两色通用） */
+  --link: #0071e3;          /* Apple 蓝 */
+}
+
+/* 跟随系统深色模式自动覆盖 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* 背景 */
+    --bg-page: #000;
+    --bg-card: #1d1d1f;
+
+    /* 文字 */
+    --text-primary: #f5f5f7;
+    --text-secondary: #86868b;
+    --text-link: #a1a1a6;
+    --text-link-hover: #fff;
+    
+    /* 分隔线 */
+    --border: #424245;
+    /* --link 保持 #0071e3 不变 */
+  }
+}

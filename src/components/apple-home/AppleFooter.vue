@@ -333,8 +333,8 @@ export default {
 
 <style lang="scss" scoped>
 .apple-footer {
-  background: #f5f5f7;
-  color: #6e6e73;
+  background: var(--bg-page);
+  color: var(--text-secondary);
   font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont,
     "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
     system-ui, sans-serif;
@@ -350,15 +350,15 @@ export default {
 .apple-footer__notes p {
   margin: 0 0 12px;
   line-height: 1.4;
-  color: #6e6e73;
+  color: var(--text-secondary);
 }
 .apple-footer__notes a {
-  color: #0071e3;
+  color: var(--link);
 }
 
 .apple-footer__divider {
   border: none;
-  border-top: 1px solid #d2d2d7;
+  border-top: 1px solid var(--border);
   margin: 16px 0;
 }
 
@@ -378,7 +378,7 @@ export default {
   width: 100%;
   font-size: 12px;
   font-weight: 600;
-  color: #1d1d1f;
+  color: var(--text-primary);
   background: none;
   border: none;
   padding: 0 0 6px;
@@ -397,19 +397,19 @@ export default {
   margin-bottom: 8px;
 }
 .apple-footer__list a {
-  color: #424245;
+  color: var(--text-link);
   line-height: 1.3;
 }
 .apple-footer__list a:hover {
-  color: #1d1d1f;
+  color: var(--text-link-hover);
 }
 
 .apple-footer__shopline {
   margin: 0;
-  color: #6e6e73;
+  color: var(--text-secondary);
 }
 .apple-footer__shopline a {
-  color: #0071e3;
+  color: var(--link);
 }
 
 .apple-footer__legal p {
@@ -421,16 +421,16 @@ export default {
   margin-bottom: 4px;
 }
 .apple-footer__legalnav a {
-  color: #424245;
+  color: var(--text-link);
   padding: 0 10px;
-  border-left: 1px solid #d2d2d7;
+  border-left: 1px solid var(--border);
 }
 .apple-footer__legalnav a:first-child {
   padding-left: 0;
   border-left: none;
 }
 .apple-footer__icp {
-  color: #6e6e73;
+  color: var(--text-secondary);
 }
 
 @media (max-width: 734px) {
@@ -439,7 +439,7 @@ export default {
     gap: 0;
   }
   .apple-footer__group {
-    border-bottom: 1px solid #d2d2d7;
+    border-bottom: 1px solid var(--border);
     margin-bottom: 0;
   }
   .apple-footer__chev {

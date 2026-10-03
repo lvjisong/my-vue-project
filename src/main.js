@@ -16,6 +16,8 @@ Vue.use(ElementUI);
 
 // 全局样式入口（reset + 变量 + mixins）
 import "@/styles/main.scss";
+// 主题变量（跟随系统深浅色，组件里用 var(--xxx) 引用）
+import "@/styles/theme.scss";
 
 Vue.config.productionTip = false;
 
