@@ -34,9 +34,21 @@
 </template>
 
 <script>
+/**
+ * AppleTileGrid.vue —— 首页下方磁贴（promo）网格
+ *
+ * PC 端：双列网格，gap 12px，白底容器
+ * 移动端（≤734px）：单列，无边距，gap 12px，
+ *   每个磁贴切换为 small_2x.jpg 移动版图片，background-size: auto 100% 居中底部
+ *
+ * tiles 数据结构见 AppleHome.vue 中 tiles 字段注释
+ */
 export default {
   name: 'AppleTileGrid',
-  props: { tiles: { type: Array, default: () => [] } },
+  props: {
+    /** 磁贴配置数组，每项字段见 AppleHome.tiles 注释 */
+    tiles: { type: Array, default: () => [] },
+  },
 };
 </script>
 

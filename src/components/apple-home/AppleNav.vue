@@ -130,9 +130,21 @@
 <script>
 /**
  * AppleNav —— 严格按 apple.com.cn globalnav 样式还原
- * - 44px，rgba(22,22,23,.8) + saturate(180%) blur(20px)
- * - 展开面板 #161617；大链接 28px/600；分类标题 rgb(110,110,115)
- * - 错峰淡入 .32s cubic-bezier(.4,0,.6,1)；暗色幕布
+ *
+ * PC 端（>734px）：
+ *   - 44px 高，rgba(22,22,23,.8) + saturate(180%) blur(20px) 毛玻璃
+ *   - 横排 11 个一级项，hover 展开三列下拉面板（#161617 底）
+ *   - 面板动画：scaleY(0→1) .38s cubic-bezier(.4,0,.6,1)，内容错峰淡入
+ *   - 关闭时先清空文案（is-closing），面板再上收
+ *
+ * 移动端（≤734px）：
+ *   - 隐藏横排链接，只留 Apple logo 左 + 搜索/购物袋/汉堡右
+ *   - 点汉堡弹出全屏菜单（#1d1d1f，z-index 3000）：
+ *       · 一级：竖向列出 11 个分类，右上角 X 关闭
+ *       · 二级：点一级进入子链接视图，左上角返回箭头 + 右上角 X
+ *   - 关闭时先隐藏内容（is-closing），面板再 scaleY 上收
+ *
+ * 数据：menus 数组为官网抓取的三列分类结构；topLink(label) 映射一级项到官网 URL
  */
 export default {
   name: 'AppleNav',

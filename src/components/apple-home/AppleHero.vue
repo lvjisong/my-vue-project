@@ -51,6 +51,20 @@
 <script>
 export default {
   name: 'AppleHero',
+  /**
+   * Props
+   * title          主标题（如 "iPhone 18 Pro"）
+   * subtitle       副标题
+   * infoLines      发售信息等多行小字（iPhone Duo 用）
+   * links          按钮数组：{ text, type: 'primary'|'outline', url }
+   * theme          'light' 浅底黑字 / 'dark' 黑底白字
+   * image          PC 端背景图（largetall_2x.jpg）
+   * imageMobile    移动端背景图（small_2x.jpg，≤734px 用 <img> 渲染）
+   * fallbackBg     图片未加载时的底色
+   * showLogo       标题前是否显示 Apple logo（Watch 用）
+   * contentPosition 'top' 文字在上 / 'bottom' 文字在下（split 模式）
+   * parallax       预留：视差系数（当前未启用）
+   */
   props: {
     title: { type: String, required: true },
     subtitle: { type: String, default: '' },

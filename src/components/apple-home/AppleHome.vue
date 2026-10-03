@@ -59,11 +59,32 @@
 </template>
 
 <script>
+/**
+ * AppleHome.vue —— apple.com.cn 首页复刻（组装入口）
+ *
+ * 页面结构（自上而下）：
+ *   1. AppleNav        顶部导航（PC 毛玻璃 + 下拉，移动端汉堡全屏菜单）
+ *   2. AppleHero × 3  首屏大横幅（iPhone 18 Pro / iPhone Duo / Watch S12）
+ *   3. AppleTileGrid  下方双列（移动端单列）磁贴 promo 区
+ *   4. AppleFooter    页脚
+ *
+ * 图片资源规范（严格对齐官网 CDN）：
+ *   - CDN 前缀统一为 https://www.apple.com.cn
+ *   - Hero 背景图 PC 端用 largetall_2x.jpg（高屏适配），移动端用 small_2x.jpg（734px 以下）
+ *   - 磁贴图片 PC 端用 large_2x.jpg，移动端用 small_2x.jpg
+ *   - 所有外链按钮均 target="_blank" 新窗口打开
+ *
+ * 维护提示：
+ *   - 新增 Hero：复制一个 <AppleHero> 块，按官网 picture source 规则配 image / image-mobile
+ *   - 新增磁贴：往 tiles 数组加一项，title/subtitle/theme/background/image/imageMobile/links 字段必填
+ *   - 链接地址必须从官网 DOM 抓取，不要凭经验编造
+ */
 import AppleNav from './AppleNav.vue';
 import AppleHero from './AppleHero.vue';
 import AppleTileGrid from './AppleTileGrid.vue';
 import AppleFooter from './AppleFooter.vue';
 
+/** 官网 CDN 前缀，图片/链接统一基于此拼接 */
 const CDN = 'https://www.apple.com.cn';
 
 export default {
@@ -77,6 +98,18 @@ export default {
       heroDuoMobile: `${CDN}/homepage/built/heroes/iphone-duo/images/hero_iphone_duo_announce__fh4u8yzndpe2_small_2x.jpg`,
       heroWatch: `${CDN}/homepage/built/heroes/apple-watch-series-12/images/hero_apple_watch_series_12__n9rln7bzvwya_largetall_2x.jpg`,
       heroWatchMobile: `${CDN}/homepage/built/heroes/apple-watch-series-12/images/hero_apple_watch_series_12__n9rln7bzvwya_small_2x.jpg`,
+      /**
+       * 磁贴（promo）配置数组
+       * 字段说明：
+       *   title       主标题文字；titleAccent 为斜体强调词（如 iPad air 中的 air）
+       *   showLogo    是否在标题前显示 Apple logo
+       *   subtitle    副标题文案
+       *   theme       'dark' 深色底（白字）/ 'light' 浅色底（黑字）
+       *   background  磁贴底色（与官网取色一致）
+       *   image       PC 端背景图（large_2x.jpg）
+       *   imageMobile 移动端背景图（small_2x.jpg，≤734px 切换）
+       *   links       按钮数组：text 文案 / type 'primary' 蓝底 / 'outline' 描边 / url 链接
+       */
       tiles: [
         {
           title: 'WATCH ULTRA 4', showLogo: true,
