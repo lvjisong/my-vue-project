@@ -35,7 +35,7 @@ const routes = [
     meta: { title: '登录', requireAuth: false }
   },
   // 404 兜底
-  { path: '*', redirect: '/' }
+  { path: '*', component: () => import('@/views/NotFound.vue'), meta: { title: '页面未找到' } }
 ]
 
 const router = new VueRouter({
