@@ -15,7 +15,8 @@
       :style="{ backgroundImage: `url(${image})` }"
     ></div>
     <div v-if="imageMobile" class="apple-hero__image-wrapper">
-      <img :src="imageMobile" alt="" />
+      <!-- 移动端背景图（alt 用产品标题，有利于图片搜索 SEO） -->
+      <img :src="imageMobile" :alt="`${title} 产品图`" />
     </div>
 
     <!-- 顶部标题 -->

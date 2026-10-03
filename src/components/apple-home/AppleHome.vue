@@ -1,5 +1,6 @@
 <template>
-  <div class="apple-home">
+  <!-- main 标签语义化：标识页面主要内容区域，SEO/无障碍识别用 -->
+  <main class="apple-home">
     <!-- 顶部导航（PC 毛玻璃 + 下拉，移动端汉堡全屏菜单） -->
     <AppleNav />
 
@@ -11,7 +12,7 @@
 
     <!-- 页脚（固定在底部） -->
     <AppleFooter />
-  </div>
+  </main>
 </template>
 
 <script>

@@ -1,5 +1,6 @@
 <template>
-  <div class="apple-tiles">
+  <!-- section 语义化：标识这是页面里一个独立的产品区块 -->
+  <section class="apple-tiles">
     <div
       v-for="tile in tiles"
       :key="tile.title"
@@ -50,7 +51,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
