@@ -24,15 +24,12 @@
           Apple 提供的购新优惠。年满 18
           周岁及以上才可参与本计划。现有设备的折抵金额可用于折抵购买新的 Apple
           设备。实际折抵金额取决于收到的符合折抵条件的设备状况是否与评估时你提供的设备描述相符。可能需要按照新设备的全额售价缴纳增值税。店内折抵需出示政府颁发并附有照片的有效身份证件（当地法律可能要求存储该信息）。该服务可能仅在部分
-          Apple Store 零售店提供。在线换购和店内换购的折抵金额可能有所不同。某些
-          Apple Store 零售店可能有不同要求。Apple
+          Apple Store 零售店提供。在线换购和店内换购的折抵金额可能有所不同。某些 Apple Store
+          零售店可能有不同要求。Apple
           的折抵服务合作伙伴保留出于任何原因拒绝、取消任何折抵交易或限制任何设备（及其数量）的权利。如需获得有关折抵及设备回收服务的更多信息，请咨询
-          Apple 的折抵服务合作伙伴。需要遵守 Apple
-          的折抵服务合作伙伴的其他条款。
+          Apple 的折抵服务合作伙伴。需要遵守 Apple 的折抵服务合作伙伴的其他条款。
         </p>
-        <p>
-          功能可能会有所变化。某些功能、应用软件和服务可能仅适用于部分地区或语言。
-        </p>
+        <p>功能可能会有所变化。某些功能、应用软件和服务可能仅适用于部分地区或语言。</p>
       </div>
 
       <hr class="apple-footer__divider" />
@@ -46,25 +43,14 @@
             class="apple-footer__group"
             :class="{ 'is-open': open[ci + '-' + group.heading] }"
           >
-            <button
-              class="apple-footer__head"
-              @click="toggle(ci + '-' + group.heading)"
-            >
+            <button class="apple-footer__head" @click="toggle(ci + '-' + group.heading)">
               {{ group.heading }}
               <span class="apple-footer__chev">⌄</span>
             </button>
             <transition name="footer-expand">
-              <ul
-                v-show="open[ci + '-' + group.heading]"
-                class="apple-footer__list"
-              >
+              <ul v-show="open[ci + '-' + group.heading]" class="apple-footer__list">
                 <li v-for="link in group.links" :key="link.text">
-                  <a
-                    :href="link.url"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >{{ link.text }}</a
-                  >
+                  <a :href="link.url" target="_blank" rel="noopener noreferrer">{{ link.text }}</a>
                 </li>
               </ul>
             </transition>
@@ -87,10 +73,7 @@
           rel="noopener noreferrer"
           style="text-decoration: underline"
           >更多门店</a
-        >，或者致电
-        <a href="tel:400-666-8800" style="text-decoration: underline"
-          >400-666-8800</a
-        >。
+        >，或者致电 <a href="tel:400-666-8800" style="text-decoration: underline">400-666-8800</a>。
       </p>
 
       <hr class="apple-footer__divider apple-footer__divider--legal" />
@@ -365,9 +348,8 @@ export default {
 .apple-footer {
   background: var(--bg-page);
   color: var(--text-secondary);
-  font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont,
-    "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
-    system-ui, sans-serif;
+  font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
   font-size: 12px;
 }
 .apple-footer__inner {

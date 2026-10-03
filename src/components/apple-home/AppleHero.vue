@@ -49,9 +49,7 @@
             rel="noopener noreferrer"
             class="apple-hero__btn"
             :class="
-              link.type === 'primary'
-                ? 'apple-hero__btn--primary'
-                : 'apple-hero__btn--outline'
+              link.type === 'primary' ? 'apple-hero__btn--primary' : 'apple-hero__btn--outline'
             "
             >{{ link.text }}</a
           >
@@ -60,11 +58,7 @@
     </div>
 
     <!-- 底部分栏：副标题、小字、按钮沉到底部 -->
-    <div
-      v-if="contentPosition === 'bottom'"
-      ref="bottom"
-      class="apple-hero__bottom"
-    >
+    <div v-if="contentPosition === 'bottom'" ref="bottom" class="apple-hero__bottom">
       <p v-if="subtitle" class="apple-hero__subtitle">{{ subtitle }}</p>
       <p v-for="(line, i) in infoLines" :key="i" class="apple-hero__info">
         {{ line }}
@@ -77,11 +71,7 @@
           target="_blank"
           rel="noopener noreferrer"
           class="apple-hero__btn"
-          :class="
-            link.type === 'primary'
-              ? 'apple-hero__btn--primary'
-              : 'apple-hero__btn--outline'
-          "
+          :class="link.type === 'primary' ? 'apple-hero__btn--primary' : 'apple-hero__btn--outline'"
           >{{ link.text }}</a
         >
       </div>
@@ -131,9 +121,8 @@ export default {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont,
-    "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
-    system-ui, sans-serif;
+  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
   overflow: hidden;
 }
 .apple-hero--light {

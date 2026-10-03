@@ -156,8 +156,7 @@ export default {
         },
         {
           title: "iCloud+",
-          subtitle:
-            "激活新 iPhone、iPad 或 Mac，可免费试用 3 个月 iCloud+ 服务¹。",
+          subtitle: "激活新 iPhone、iPad 或 Mac，可免费试用 3 个月 iCloud+ 服务¹。",
           theme: "light",
           background: "#f5f5f7",
           image: `${IMG}/promos/icloud_large_2x.jpg`,
@@ -222,8 +221,7 @@ export default {
         {
           title: "Trade In 换购计划",
           showLogo: true,
-          subtitle:
-            "用 iPhone 13 或后续机型来换购，可享预计为 RMB 900 至 RMB 8300 的折抵优惠²。",
+          subtitle: "用 iPhone 13 或后续机型来换购，可享预计为 RMB 900 至 RMB 8300 的折抵优惠²。",
           theme: "light",
           background: "#f5f5f7",
           image: `${IMG}/promos/trade-in_large_2x.jpg`,

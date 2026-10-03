@@ -12,9 +12,7 @@
           <div class="price">¥{{ item.price }}</div>
         </li>
       </ul>
-      <p v-else class="empty">
-        购物袋是空的，去 <router-link to="/">首页</router-link> 逛逛吧。
-      </p>
+      <p v-else class="empty">购物袋是空的，去 <router-link to="/">首页</router-link> 逛逛吧。</p>
     </template>
 
     <button class="back" @click="$router.back()">返回</button>

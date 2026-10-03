@@ -3,11 +3,7 @@
     <!-- 展开下拉时的暗色毛玻璃幕布（置于 header 外，backdrop-filter 才能模糊页面） -->
     <!-- hover 导航下拉 / PC 购物袋下拉 共用；点击幕布收起 -->
     <transition name="curtain">
-      <div
-        v-show="showPanel"
-        class="apple-nav__curtain"
-        @click="closeOverlay"
-      ></div>
+      <div v-show="showPanel" class="apple-nav__curtain" @click="closeOverlay"></div>
     </transition>
 
     <header
@@ -79,11 +75,7 @@
               />
             </svg>
           </button>
-          <button
-            class="apple-nav__hamburger"
-            @click="onHamburgerClick"
-            aria-label="菜单"
-          >
+          <button class="apple-nav__hamburger" @click="onHamburgerClick" aria-label="菜单">
             <span></span><span></span>
           </button>
         </div>
@@ -100,11 +92,7 @@
         >
           <!-- 导航下拉内容 -->
           <div v-if="panelMode === 'nav'" class="apple-nav__flyout-inner">
-            <div
-              v-for="(col, gi) in dropColumns"
-              :key="col.heading"
-              class="apple-nav__col"
-            >
+            <div v-for="(col, gi) in dropColumns" :key="col.heading" class="apple-nav__col">
               <p class="apple-nav__col-head" :style="stagger(0, gi)">
                 {{ col.heading }}
               </p>
@@ -151,11 +139,9 @@
           <div v-else class="apple-nav__cart">
             <p class="apple-nav__cart-title">{{ cartMenu.title }}</p>
             <p class="apple-nav__cart-sub">
-              <a
-                :href="cartMenu.sub.linkUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                >{{ cartMenu.sub.linkText }}</a
+              <a :href="cartMenu.sub.linkUrl" target="_blank" rel="noopener noreferrer">{{
+                cartMenu.sub.linkText
+              }}</a
               >{{ cartMenu.sub.text }}
             </p>
             <p class="apple-nav__cart-heading">{{ cartMenu.heading }}</p>
@@ -177,9 +163,11 @@
                 stroke="currentColor"
                 stroke-width="1.8"
               >
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                <line x1="12" y1="22.08" x2="12" y2="12"/>
+                <path
+                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                />
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                <line x1="12" y1="22.08" x2="12" y2="12" />
               </svg>
               <svg
                 v-else-if="link.icon === 'favorites'"
@@ -190,7 +178,7 @@
                 stroke="currentColor"
                 stroke-width="1.8"
               >
-                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
               </svg>
               <svg
                 v-else-if="link.icon === 'account'"
@@ -201,8 +189,10 @@
                 stroke="currentColor"
                 stroke-width="1.8"
               >
-                <circle cx="12" cy="12" r="3"/>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                <circle cx="12" cy="12" r="3" />
+                <path
+                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                />
               </svg>
               <svg
                 v-else-if="link.icon === 'login'"
@@ -213,8 +203,8 @@
                 stroke="currentColor"
                 stroke-width="1.8"
               >
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
               </svg>
               {{ link.label }}
             </a>
@@ -222,7 +212,7 @@
         </div>
       </transition>
     </header>
-    
+
     <!-- 移动端全屏面板（root 级，汉堡菜单 / 购物袋共用，按 mobileMode 切换内容） -->
     <transition name="mobile-fade">
       <div
@@ -235,11 +225,7 @@
       >
         <!-- ===== 购物袋内容 ===== -->
         <template v-if="mobileMode === 'cart'">
-          <button
-            class="apple-nav__mobile-close"
-            @click="closeMobile"
-            aria-label="关闭"
-          >
+          <button class="apple-nav__mobile-close" @click="closeMobile" aria-label="关闭">
             <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
               <path
                 d="M17.3 1.3L16 .01 9 7.01 2 .01.7 1.3 7.7 8.3.7 15.3l1.3 1.3L9 9.6l7 7 1.3-1.3-7-7z"
@@ -249,11 +235,9 @@
           <div class="apple-nav__cart-mobile">
             <p class="apple-nav__cart-title">{{ cartMenu.title }}</p>
             <p class="apple-nav__cart-sub">
-              <a
-                :href="cartMenu.sub.linkUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                >{{ cartMenu.sub.linkText }}</a
+              <a :href="cartMenu.sub.linkUrl" target="_blank" rel="noopener noreferrer">{{
+                cartMenu.sub.linkText
+              }}</a
               >{{ cartMenu.sub.text }}
             </p>
             <p class="apple-nav__cart-heading">{{ cartMenu.heading }}</p>
@@ -275,9 +259,11 @@
                 stroke="currentColor"
                 stroke-width="1.8"
               >
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                <line x1="12" y1="22.08" x2="12" y2="12"/>
+                <path
+                  d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                />
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                <line x1="12" y1="22.08" x2="12" y2="12" />
               </svg>
               <svg
                 v-else-if="link.icon === 'favorites'"
@@ -288,7 +274,7 @@
                 stroke="currentColor"
                 stroke-width="1.8"
               >
-                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
               </svg>
               <svg
                 v-else-if="link.icon === 'account'"
@@ -299,8 +285,10 @@
                 stroke="currentColor"
                 stroke-width="1.8"
               >
-                <circle cx="12" cy="12" r="3"/>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                <circle cx="12" cy="12" r="3" />
+                <path
+                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                />
               </svg>
               <svg
                 v-else-if="link.icon === 'login'"
@@ -311,8 +299,8 @@
                 stroke="currentColor"
                 stroke-width="1.8"
               >
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
               </svg>
               {{ link.label }}
             </a>
@@ -322,11 +310,7 @@
         <!-- ===== 汉堡导航内容 ===== -->
         <template v-else>
           <template v-if="mobileIndex === -1">
-            <button
-              class="apple-nav__mobile-close"
-              @click="closeMobile"
-              aria-label="关闭"
-            >
+            <button class="apple-nav__mobile-close" @click="closeMobile" aria-label="关闭">
               <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
                 <path
                   d="M17.3 1.3L16 .01 9 7.01 2 .01.7 1.3 7.7 8.3.7 15.3l1.3 1.3L9 9.6l7 7 1.3-1.3-7-7z"
@@ -344,20 +328,12 @@
             </nav>
           </template>
           <template v-else>
-            <button
-              class="apple-nav__mobile-back"
-              @click="mobileIndex = -1"
-              aria-label="返回"
-            >
+            <button class="apple-nav__mobile-back" @click="mobileIndex = -1" aria-label="返回">
               <svg width="12" height="20" viewBox="0 0 12 20" fill="currentColor">
                 <path d="M10.3 18.7L2 10l8.3-8.7-1.4-1.4L-.7 10l12 10.1z" />
               </svg>
             </button>
-            <button
-              class="apple-nav__mobile-close"
-              @click="closeMobile"
-              aria-label="关闭"
-            >
+            <button class="apple-nav__mobile-close" @click="closeMobile" aria-label="关闭">
               <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
                 <path
                   d="M17.3 1.3L16 .01 9 7.01 2 .01.7 1.3 7.7 8.3.7 15.3l1.3 1.3L9 9.6l7 7 1.3-1.3-7-7z"
@@ -424,16 +400,16 @@ export default {
   data() {
     return {
       // ===== PC hover 下拉面板状态（导航 / 购物袋共用一个 flyout）=====
-      activeIndex: -1,   // 当前 hover 的导航项下标，-1 表示无（仅 nav 模式用）
-      showPanel: false,  // flyout 是否可见
-      panelMode: "nav",  // 'nav' 三列导航 | 'cart' 购物袋
-      isClosing: false,  // 关闭动画中（内容先消失，面板再上收）
+      activeIndex: -1, // 当前 hover 的导航项下标，-1 表示无（仅 nav 模式用）
+      showPanel: false, // flyout 是否可见
+      panelMode: "nav", // 'nav' 三列导航 | 'cart' 购物袋
+      isClosing: false, // 关闭动画中（内容先消失，面板再上收）
 
       // ===== 移动端全屏面板状态（汉堡菜单 / 购物袋共用一个面板）=====
-      mobileOpen: false,        // 全屏面板是否可见
-      mobileMode: "menu",      // 当前面板内容：'menu' 汉堡导航 | 'cart' 购物袋
-      mobileIndex: -1,         // 汉堡二级分类下标，-1 表示一级列表（仅 menu 模式用）
-      mobileClosing: false,    // 面板关闭动画中
+      mobileOpen: false, // 全屏面板是否可见
+      mobileMode: "menu", // 当前面板内容：'menu' 汉堡导航 | 'cart' 购物袋
+      mobileIndex: -1, // 汉堡二级分类下标，-1 表示一级列表（仅 menu 模式用）
+      mobileClosing: false, // 面板关闭动画中
 
       // ===== 共享 =====
       closeTimer: null, // 鼠标移出后延迟关闭面板的 setTimeout 句柄
@@ -664,13 +640,7 @@ export default {
             },
             {
               heading: "Apple Watch 相关",
-              links: [
-                "Apple Watch 支持",
-                "AppleCare",
-                "OS 27",
-                "Apple 打造的 App",
-                "教育",
-              ],
+              links: ["Apple Watch 支持", "AppleCare", "OS 27", "Apple 打造的 App", "教育"],
             },
           ],
         },
@@ -703,22 +673,12 @@ export default {
           columns: [
             {
               heading: "探索 AirPods",
-              links: [
-                "探索全部 AirPods 机型",
-                "AirPods 5",
-                "AirPods Pro 3",
-                "AirPods Max 2",
-              ],
+              links: ["探索全部 AirPods 机型", "AirPods 5", "AirPods Pro 3", "AirPods Max 2"],
               footLinks: ["AirPods 机型比较"],
             },
             {
               heading: "选购 AirPods",
-              links: [
-                "选购 AirPods 5",
-                "选购 AirPods Pro 3",
-                "选购 AirPods Max 2",
-                "AirPods 配件",
-              ],
+              links: ["选购 AirPods 5", "选购 AirPods Pro 3", "选购 AirPods Max 2", "AirPods 配件"],
             },
             {
               heading: "AirPods 相关",
@@ -739,14 +699,7 @@ export default {
             },
             {
               heading: "家居相关",
-              links: [
-                "HomePod 支持",
-                "AppleCare",
-                "家庭 App",
-                "Apple Music",
-                "Siri",
-                "隔空播放",
-              ],
+              links: ["HomePod 支持", "AppleCare", "家庭 App", "Apple Music", "Siri", "隔空播放"],
             },
           ],
         },
@@ -787,15 +740,7 @@ export default {
           columns: [
             {
               heading: "探索技术支持",
-              links: [
-                "iPhone",
-                "Mac",
-                "iPad",
-                "Watch",
-                "Apple Vision Pro",
-                "AirPods",
-                "Music",
-              ],
+              links: ["iPhone", "Mac", "iPad", "Watch", "Apple Vision Pro", "AirPods", "Music"],
               footLinks: ["探索各类技术支持"],
             },
             {
@@ -804,12 +749,7 @@ export default {
             },
             {
               heading: "实用主题",
-              links: [
-                "获取 AppleCare",
-                "Apple 账户和密码",
-                "账单和订阅",
-                "无障碍使用",
-              ],
+              links: ["获取 AppleCare", "Apple 账户和密码", "账单和订阅", "无障碍使用"],
             },
           ],
         },
@@ -1132,9 +1072,8 @@ export default {
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
   color: rgba(255, 255, 255, 0.8);
-  font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont,
-    "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
-    system-ui, sans-serif;
+  font-family: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
 }
 /* 展开时导航条本体变为不透明深色 */
 .apple-nav.is-open {

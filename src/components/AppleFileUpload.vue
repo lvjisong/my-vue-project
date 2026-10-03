@@ -48,18 +48,12 @@
           >开始上传</el-button
         >
         <!-- 大小上限提示（未配置时不显示） -->
-        <span v-if="maxSizeText" class="apple-upload-limit"
-          >单个文件不超过 {{ maxSizeText }}</span
-        >
+        <span v-if="maxSizeText" class="apple-upload-limit">单个文件不超过 {{ maxSizeText }}</span>
       </div>
 
       <!-- Apple 风格已选文件列表：多文件卡片，上传前可逐个删除（上传中禁用删除） -->
       <div v-if="pendingFiles.length" class="apple-file-list">
-        <div
-          v-for="file in pendingFiles"
-          :key="file.uid"
-          class="apple-file-card"
-        >
+        <div v-for="file in pendingFiles" :key="file.uid" class="apple-file-card">
           <!-- 文件类型图标 -->
           <div class="apple-file-card__icon">
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
@@ -87,12 +81,8 @@
             <p class="apple-file-card__size">
               {{ formatSize(file.size) }}
               <span v-if="file.processing"> · 处理中…</span>
-              <span v-else-if="file.sliced">
-                · {{ file.chunks.length }} 分片 · 已就绪</span
-              >
-              <span v-else-if="uploadParams.md5 && file.md5">
-                · MD5 已就绪</span
-              >
+              <span v-else-if="file.sliced"> · {{ file.chunks.length }} 分片 · 已就绪</span>
+              <span v-else-if="uploadParams.md5 && file.md5"> · MD5 已就绪</span>
             </p>
           </div>
           <!-- 单文件删除按钮（上传中禁用） -->
@@ -128,12 +118,7 @@
         <!-- 环形进度（Apple 风格：iOS 下载进度环） -->
         <div class="apple-upload__ring-wrap">
           <svg class="apple-upload__ring" viewBox="0 0 64 64">
-            <circle
-              class="apple-upload__ring-track"
-              cx="32"
-              cy="32"
-              :r="RADIUS"
-            />
+            <circle class="apple-upload__ring-track" cx="32" cy="32" :r="RADIUS" />
             <circle
               class="apple-upload__ring-bar"
               cx="32"
@@ -171,9 +156,7 @@
             </template>
             <!-- 上传中：百分比（由弹簧平滑驱动） -->
             <template v-else>
-              <span class="apple-upload__percent"
-                >{{ Math.round(smoothProgress) }}%</span
-              >
+              <span class="apple-upload__percent">{{ Math.round(smoothProgress) }}%</span>
             </template>
           </div>
         </div>
@@ -528,10 +511,7 @@ export default {
         return;
       }
       // 需切片但仍有文件未切片完成
-      if (
-        this.uploadParams.sliceSize > 0 &&
-        this.pendingFiles.some((f) => !f.sliced)
-      ) {
+      if (this.uploadParams.sliceSize > 0 && this.pendingFiles.some((f) => !f.sliced)) {
         this.$message.error("文件尚未处理完成，请稍候");
         return;
       }
@@ -551,8 +531,7 @@ export default {
           .catch((err) => {
             this.uploading = false; // 接口失败解锁
             this.$alert(
-              "模拟接口返回错误：" +
-                (err && err.message ? err.message : "未知错误"),
+              "模拟接口返回错误：" + (err && err.message ? err.message : "未知错误"),
               "上传失败",
               { type: "error", confirmButtonText: "知道了" }
             );
@@ -588,8 +567,7 @@ export default {
       this.uploadState.status = "uploading";
       this.uploadState.title = total ? this.pendingFiles[0].name : "正在上传";
       // 多文件时展示"正在上传 1/N"，让用户清楚整体进度
-      this.uploadState.message =
-        total > 1 ? "正在上传 1/" + total : "正在上传…";
+      this.uploadState.message = total > 1 ? "正在上传 1/" + total : "正在上传…";
       this.uploadState.progress = 0;
       if (this.uploadParams.simulate) {
         this.simulateUpload(); // 模拟上传：便于预览动画效果
@@ -615,8 +593,7 @@ export default {
       const total = entries.length;
       for (let i = 0; i < total; i++) {
         this.uploadState.title = entries[i].name;
-        this.uploadState.message =
-          total > 1 ? "正在上传 " + (i + 1) + "/" + total : "正在上传…";
+        this.uploadState.message = total > 1 ? "正在上传 " + (i + 1) + "/" + total : "正在上传…";
         await new Promise((resolve) => {
           clearInterval(this.simTimer);
           let sub = 0;
@@ -651,8 +628,7 @@ export default {
       for (let i = 0; i < total; i++) {
         const entry = entries[i];
         this.uploadState.title = entry.name;
-        this.uploadState.message =
-          total > 1 ? "正在上传 " + (i + 1) + "/" + total : "正在上传…";
+        this.uploadState.message = total > 1 ? "正在上传 " + (i + 1) + "/" + total : "正在上传…";
         const base = (i / total) * 100;
         try {
           await this.uploadOne(entry, (fileLocal) => {
@@ -755,16 +731,12 @@ export default {
     onUploadSuccess(successCount) {
       this.uploading = false; // 解锁
       // 记录本次成功上传的文件数（在清空列表前）
-      const total =
-        typeof successCount === "number"
-          ? successCount
-          : this.pendingFiles.length;
+      const total = typeof successCount === "number" ? successCount : this.pendingFiles.length;
       // 结束时不展示单个文件名，改为整体结果，避免用户疑惑"为什么停在最后一个文件"
       this.uploadState.status = "success";
       this.uploadState.title = "上传完成";
       this.uploadState.progress = 100;
-      this.uploadState.message =
-        total > 1 ? total + " 个文件上传成功" : "文件上传成功";
+      this.uploadState.message = total > 1 ? total + " 个文件上传成功" : "文件上传成功";
       // 文件已消费，清除，避免再次点击"开始上传"复用
       this.resetFileState();
       clearTimeout(this.hideTimer);
@@ -785,12 +757,10 @@ export default {
       this.uploadState.status = "error";
       // 结束时不展示单个文件名，改为整体结果
       this.uploadState.title = "上传未完成";
-      this.uploadState.message =
-        "成功 " + successCount + " 个，失败 " + failList.length + " 个";
+      this.uploadState.message = "成功 " + successCount + " 个，失败 " + failList.length + " 个";
       // 弹窗逐个列出失败文件及原因，方便用户确认后重新上传
       this.$alert(
-        "以下文件上传失败：\n" +
-          failList.map((f) => f.name + "（" + f.message + "）").join("\n"),
+        "以下文件上传失败：\n" + failList.map((f) => f.name + "（" + f.message + "）").join("\n"),
         "上传未完成",
         { type: "error", confirmButtonText: "知道了" }
       );
@@ -832,10 +802,7 @@ export default {
       // 按 chunkSize 循环切片
       while (currentChunk < entry.raw.size) {
         chunks.push(
-          entry.raw.slice(
-            currentChunk,
-            Math.min(entry.raw.size, currentChunk + chunkSize)
-          )
+          entry.raw.slice(currentChunk, Math.min(entry.raw.size, currentChunk + chunkSize))
         );
         currentChunk += chunkSize;
       }
@@ -920,13 +887,12 @@ export default {
 /* ---- Apple 风格按钮：参考 apple.com 按钮的方形圆角 + 主/次级层次 ---- */
 .upload-row .apple-btn {
   border-radius: 8px; /* 方形圆角，参照 apple.com 按钮样式 */
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
-    system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
   font-weight: 500;
   letter-spacing: -0.01em;
-  transition: transform 100ms ease-out, background-color 150ms ease-out,
-    border-color 150ms ease-out, box-shadow 200ms ease-out;
+  transition: transform 100ms ease-out, background-color 150ms ease-out, border-color 150ms ease-out,
+    box-shadow 200ms ease-out;
 }
 /* 按压反馈：按下时轻微缩小，回应在 pointer-down 立即发生 */
 .upload-row .apple-btn:not(.is-disabled):active {
@@ -969,9 +935,8 @@ export default {
   margin-left: 12px;
   font-size: 12px;
   color: #6e6e73;
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
-    system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
 }
 
 /* 原生文件选择框隐藏，仅由按钮触发 */
@@ -1030,9 +995,8 @@ export default {
   /* box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04),
                 0 4px 12px rgba(0, 0, 0, 0.08),
                 0 12px 28px rgba(0, 0, 0, 0.06); */
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
-    system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
   text-align: left;
   border: 1px solid rgba(60, 60, 67, 0.18);
 }
@@ -1085,8 +1049,7 @@ export default {
   background: rgba(120, 120, 128, 0.12);
   color: #48484a;
   cursor: pointer;
-  transition: background 120ms ease-out, transform 120ms ease-out,
-    color 120ms ease-out;
+  transition: background 120ms ease-out, transform 120ms ease-out, color 120ms ease-out;
 }
 .apple-file-card__delete:hover {
   background: rgba(255, 59, 48, 0.15);
@@ -1120,9 +1083,8 @@ export default {
   backdrop-filter: blur(30px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.08);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
-    system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
   will-change: transform, opacity;
 }
 

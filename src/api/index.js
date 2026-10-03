@@ -18,8 +18,7 @@ import request from "@/utils/request";
 // ===== 基础请求方法（封装 axios 实例）=====
 
 /** GET 请求，params 自动拼到 query string */
-export const get = (url, params, config = {}) =>
-  request.get(url, { params, ...config });
+export const get = (url, params, config = {}) => request.get(url, { params, ...config });
 
 /** POST 请求，data 作为 body 发送 */
 export const post = (url, data, config = {}) => request.post(url, data, config);

@@ -129,10 +129,7 @@ service.interceptors.response.use(
     const res = response.data;
 
     // 二进制流（文件下载等）不按业务结构解析，原样返回
-    if (
-      config.responseType === "blob" ||
-      config.responseType === "arraybuffer"
-    ) {
+    if (config.responseType === "blob" || config.responseType === "arraybuffer") {
       return res;
     }
 
@@ -253,10 +250,7 @@ service.interceptors.response.use(
         default:
           msg = "请求失败（HTTP " + status + "）";
       }
-    } else if (
-      error.code === "ECONNABORTED" ||
-      /timeout/i.test(error.message || "")
-    ) {
+    } else if (error.code === "ECONNABORTED" || /timeout/i.test(error.message || "")) {
       // 超时（axios 超时会以 ECONNABORTED 抛出）
       msg = "请求超时，请稍后重试";
     } else if (error.request) {

@@ -19,20 +19,20 @@
 
 :root {
   /* 背景 */
-  --bg-page: #f5f5f7;       /* 页面/页脚底色 */
-  --bg-card: #fff;          /* 卡片底色 */
+  --bg-page: #f5f5f7; /* 页面/页脚底色 */
+  --bg-card: #fff; /* 卡片底色 */
 
   /* 文字 */
-  --text-primary: #1d1d1f;  /* 主标题/重要文字 */
+  --text-primary: #1d1d1f; /* 主标题/重要文字 */
   --text-secondary: #6e6e73; /* 次要说明/法律小字 */
-  --text-link: #424245;     /* 普通链接 */
+  --text-link: #424245; /* 普通链接 */
   --text-link-hover: #1d1d1f;
 
   /* 分隔线 */
   --border: #d2d2d7;
 
   /* 强调色（两色通用） */
-  --link: #0071e3;          /* Apple 蓝 */
+  --link: #0071e3; /* Apple 蓝 */
 }
 
 /* 跟随系统深色模式自动覆盖 */

@@ -1,4 +1,4 @@
-@use 'variables' as *;
+@use "variables" as *;
 
 // ============================================================
 // 全局 SCSS mixins（自动注入，组件里直接 @include xxx()）
@@ -23,8 +23,12 @@
   background: $apple-blue;
   color: #fff;
   transition: background-color 150ms ease-out, transform 120ms ease-out;
-  &:hover { background: $apple-blue-hover; }
-  &:active { transform: scale(0.97); }
+  &:hover {
+    background: $apple-blue-hover;
+  }
+  &:active {
+    transform: scale(0.97);
+  }
 }
 
 // 描边按钮（蓝边蓝字，hover 变实心）
@@ -38,6 +42,11 @@
   border: 1px solid $apple-blue;
   color: $apple-blue;
   transition: all 150ms ease-out, transform 120ms ease-out;
-  &:hover { background: $apple-blue; color: #fff; }
-  &:active { transform: scale(0.97); }
+  &:hover {
+    background: $apple-blue;
+    color: #fff;
+  }
+  &:active {
+    transform: scale(0.97);
+  }
 }

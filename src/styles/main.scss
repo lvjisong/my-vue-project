@@ -5,6 +5,6 @@
 //       这里再 @use 一次保证本文件内可用），最后 reset 兜底。
 // 组件里直接用 $xxx / @include xxx()，无需自己 @use。
 // ============================================================
-@use 'variables' as *;
-@use 'mixins' as *;
-@use 'reset';
+@use "variables" as *;
+@use "mixins" as *;
+@use "reset";

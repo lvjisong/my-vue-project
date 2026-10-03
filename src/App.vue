@@ -57,9 +57,8 @@ body {
   width: 100%;
 }
 #app {
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
-    system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #1d1d1f;

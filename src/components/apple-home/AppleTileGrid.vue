@@ -31,9 +31,7 @@
             />
           </svg>
           {{ tile.title
-          }}<em v-if="tile.titleAccent" class="apple-tile__accent">{{
-            tile.titleAccent
-          }}</em>
+          }}<em v-if="tile.titleAccent" class="apple-tile__accent">{{ tile.titleAccent }}</em>
         </h3>
         <p v-if="tile.subtitle" class="apple-tile__subtitle">
           {{ tile.subtitle }}
@@ -47,9 +45,7 @@
             rel="noopener noreferrer"
             class="apple-tile__btn"
             :class="
-              link.type === 'primary'
-                ? 'apple-tile__btn--primary'
-                : 'apple-tile__btn--outline'
+              link.type === 'primary' ? 'apple-tile__btn--primary' : 'apple-tile__btn--outline'
             "
             >{{ link.text }}</a
           >
@@ -85,9 +81,8 @@ export default {
   gap: 12px;
   background: #fff;
   padding: 12px;
-  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont,
-    "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
-    system-ui, sans-serif;
+  font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
 }
 .apple-tile {
   position: relative;
