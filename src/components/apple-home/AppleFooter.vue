@@ -44,31 +44,34 @@
             v-for="group in col"
             :key="group.heading"
             class="apple-footer__group"
+            :class="{ 'is-open': open[ci + '-' + group.heading] }"
           >
             <button
               class="apple-footer__head"
               @click="toggle(ci + '-' + group.heading)"
             >
               {{ group.heading }}
-              <span class="apple-footer__chev">›</span>
+              <span class="apple-footer__chev">⌄</span>
             </button>
-            <ul
-              v-show="open[ci + '-' + group.heading]"
-              class="apple-footer__list"
-            >
-              <li v-for="link in group.links" :key="link.text">
-                <a :href="link.url" target="_blank" rel="noopener noreferrer">{{
-                  link.text
-                }}</a>
-              </li>
-            </ul>
+            <transition name="footer-expand">
+              <ul
+                v-show="open[ci + '-' + group.heading]"
+                class="apple-footer__list"
+              >
+                <li v-for="link in group.links" :key="link.text">
+                  <a :href="link.url" target="_blank" rel="noopener noreferrer">{{
+                    link.text
+                  }}</a>
+                </li>
+              </ul>
+            </transition>
           </div>
         </div>
       </div>
 
-      <hr class="apple-footer__divider" />
+      <hr class="apple-footer__divider apple-footer__divider--legal" />
 
-      <p class="apple-footer__shopline">
+      <p class="apple-footer__shopline apple-footer__shopline--legal">
         更多选购方式：<a
           href="https://www.apple.com.cn/retail/"
           target="_blank"
@@ -87,7 +90,7 @@
         >。
       </p>
 
-      <hr class="apple-footer__divider" />
+      <hr class="apple-footer__divider apple-footer__divider--legal" />
 
       <div class="apple-footer__legal">
         <p>Copyright © 2026 Apple Inc. 保留所有权利。</p>
@@ -440,13 +443,42 @@ export default {
   }
   .apple-footer__group {
     border-bottom: 1px solid var(--border);
+    border-top: none;
     margin-bottom: 0;
+  }
+  .apple-footer__head {
+    padding: 14px 0;
   }
   .apple-footer__chev {
     display: inline-block;
+    transition: transform 0.3s ease;
+  }
+  .apple-footer__group.is-open .apple-footer__chev {
+    transform: scaleY(-1);
   }
   .apple-footer__list {
-    padding: 0 0 12px;
+    padding: 0 0 14px 12px;
+    overflow: hidden;
+  }
+  /* 展开动画：和 PC 下拉面板一致 scaleY 0.38s；收起无过渡 */
+  .footer-expand-enter-active {
+    transition: transform 0.38s cubic-bezier(0.4, 0, 0.6, 1),
+                opacity 0.25s ease;
+    transform-origin: top;
+  }
+  .footer-expand-enter {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  .footer-expand-leave-active {
+    transition: none;
+  }
+  /* 移动端：Copyright 上方不要分割线 */
+  .apple-footer__divider--legal {
+    display: none;
+  }
+  .apple-footer__shopline--legal{
+    margin: 20px 0;
   }
 }
 @media (min-width: 735px) {
