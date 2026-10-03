@@ -327,6 +327,18 @@ export default {
     };
   },
   methods: {
+    /**
+     * 切换移动端 group 的展开/收起
+     *
+     * 原理：
+     *   - this.open 是一个对象，key 形如 "0-选购及了解"，value 为 true/false
+     *   - 模板里用 v-show="open[key]" 控制对应 ul 的显示
+     *   - 每次点击把该 key 的值取反：true→false（收起），undefined→true（展开）
+     *
+     * 为什么用 this.$set：
+     *   Vue 2 无法检测对象新增属性，直接 this.open[key] = xxx 视图不更新；
+     *   this.$set 会新增响应式属性并触发重渲染。
+     */
     toggle(key) {
       this.$set(this.open, key, !this.open[key]);
     },

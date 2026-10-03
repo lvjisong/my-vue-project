@@ -589,6 +589,11 @@ export default {
     },
   },
   methods: {
+    /**
+     * 关闭移动端全屏菜单
+     * 流程：先标记 closing（隐藏内容）→ 延迟 20ms 收起面板 → 400ms 后重置状态
+     * 对应模板里的 transition leave 动画
+     */
     closeMobile() {
       this.mobileClosing = true;
       this.$nextTick(() => {
@@ -601,7 +606,11 @@ export default {
         this.mobileIndex = -1;
       }, 400);
     },
-    // 顶部导航标签 -> 官网地址（从 apple.com.cn 首页抓取）
+    /**
+     * 顶部导航一级标签 -> 官网 URL
+     * @param {string} label 如 "Mac"、"iPhone"
+     * @returns {string} 完整 URL
+     */
     topLink(label) {
       const B = "https://www.apple.com.cn";
       const map = {
@@ -619,7 +628,12 @@ export default {
       };
       return map[label] || `${B}/`;
     },
-    // 下拉链接文本 -> 官网 URL 映射（已逐字核对 apple.com.cn 实际 DOM）
+    /**
+     * 下拉菜单链接文本 -> 官网 URL 映射
+     * 已逐字核对 apple.com.cn 实际 DOM，未匹配到的默认跳首页
+     * @param {string} text 链接文案
+     * @returns {string} 完整 URL
+     */
     linkUrl(text) {
       const B = "https://www.apple.com.cn";
       const S = `${B}/cn/shop/goto`;
@@ -759,33 +773,40 @@ export default {
       };
       return map[text] || `${B}/`;
     },
-    // 错峰延迟：第 li 项 * 20ms + 第 gi 组 * 80ms（官网公式）
+    /**
+     * 下拉面板内链接错峰动画延迟
+     * 第 li 个链接 * 20ms + 第 gi 列 * 80ms，形成从上到下逐行淡入效果
+     */
     stagger(li, gi) {
       return { transitionDelay: `${li * 20 + (gi + 1) * 80}ms` };
     },
+    /** 鼠标移入某个一级菜单：取消关闭计时，显示对应下拉面板 */
     openMenu(index) {
       clearTimeout(this.closeTimer);
       this.isClosing = false;
       this.activeIndex = index;
       this.showPanel = true;
     },
+    /** 鼠标移出导航栏：延迟 200ms 后先隐藏内容再收起面板，避免鼠标快速划过抖动 */
     scheduleClose() {
       clearTimeout(this.closeTimer);
       this.closeTimer = setTimeout(() => {
-        // 文案先淡出，再收空面板
         this.isClosing = true;
         this.showPanel = false;
       }, 200);
     },
+    /** 鼠标又移回导航栏：取消待执行的关闭 */
     cancelClose() {
       clearTimeout(this.closeTimer);
     },
+    /** 下拉面板收起动画结束后：重置激活项，恢复 closing 标记 */
     afterLeave() {
       this.activeIndex = -1;
       this.isClosing = false;
     },
   },
   beforeDestroy() {
+    // 组件销毁前清掉未执行的计时器，避免内存泄漏
     clearTimeout(this.closeTimer);
   },
 };
