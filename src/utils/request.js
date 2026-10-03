@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
+import auth from '@/utils/auth'
 
 /**
  * request —— 项目统一的 axios 封装（生产可用）
@@ -25,32 +26,25 @@ import { Message } from 'element-ui'
  */
 
 // ==================== Token 存取 ====================
-// token 的存储键（可按项目实际存储位置调整）
-const ACCESS_TOKEN_KEY = 'token'
-const REFRESH_TOKEN_KEY = 'refresh_token'
-
-/** 读取访问 token（localStorage） */
+// 统一走 @/utils/auth.js（Cookie + Vuex），不要在本文件直接读写
+/** 读取访问 token */
 function getToken() {
-  return localStorage.getItem(ACCESS_TOKEN_KEY) || ''
+  return auth.getToken() || ''
 }
 
-/** 读取刷新 token（localStorage），用于自动续期 */
+/** 读取刷新 token（走 auth.js；后端不支持时 auth.getRefreshToken 返回空串） */
 function getRefreshToken() {
-  return localStorage.getItem(REFRESH_TOKEN_KEY) || ''
+  return auth.getRefreshToken() || ''
 }
 
-/** 写入新的访问 token / 刷新 token（刷新 token 可为空则不更新） */
+/** 写入新 token（登录成功时由 auth.setToken 处理） */
 function setTokens(accessToken, refreshToken) {
-  localStorage.setItem(ACCESS_TOKEN_KEY, accessToken)
-  if (refreshToken) {
-    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
-  }
+  auth.setToken(accessToken)
 }
 
 /** 清除全部 token（登出/续期失败时调用） */
 function clearTokens() {
-  localStorage.removeItem(ACCESS_TOKEN_KEY)
-  localStorage.removeItem(REFRESH_TOKEN_KEY)
+  auth.logout()
 }
 
 // ==================== 自动刷新 token 配置 ====================

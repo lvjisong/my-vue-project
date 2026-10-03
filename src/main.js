@@ -8,6 +8,7 @@
 import Vue from "vue";
 import App from "./App.vue";
 import router from "@/router";
+import store from "@/store";
 
 // Element UI 组件库（全量引入；如需进一步减小体积可改为按需 import）
 // 样式由 babel-plugin-component 按使用情况自动注入，不再全量引入 css
@@ -23,5 +24,6 @@ Vue.config.productionTip = false;
 
 new Vue({
   router,
+  store,
   render: (h) => h(App),
 }).$mount("#app");

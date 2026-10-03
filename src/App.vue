@@ -9,26 +9,40 @@
 </template>
 
 <script>
+import auth from "@/utils/auth";
+
 // import AppleFileUpload from './components/AppleFileUpload.vue'
 export default {
   name: "App",
   components: {
     // AppleFileUpload
   },
+  async created() {
+    // 启动时：如果 Cookie 里有 token，尝试拉用户信息
+    // TODO-AUTH: 接后端后 fetchUser() 会真正调 /api/user/me
+    if (auth.isLoggedIn()) {
+      try {
+        await auth.fetchUser();
+      } catch {
+        auth.logout();
+      }
+    }
+  },
   data() {
     return {
-      uploadParams: {
-        multiple: true, // 是否多选
-        fileTypes: ".jpg,.jpeg,.png,.gif", // 文件类型（空字符串表示不限）
-        uploadUrl: "https://www.xxx.com:8080", // 真实上传接口地址
-        webkitdirectory: false, // 是否上传文件夹
-        sliceSize: 0, // 切片大小（0 表示不切片）
-        md5: false, // 是否计算 MD5
-        maxFileSize: 100 * 1024 * 1024, // 单个文件大小上限（0 表示不限）
-        maxFileCount: 4, // 最多可选文件数（0 表示不限）
-        simulate: true, // 是否模拟上传（true 预览动画，false 走真实接口）
-        mockError: false, // 模拟接口是否返回错误（true 演示报错弹窗）
-      },
+      // TODO-UPLOAD: 按需打开下面的上传参数配置
+      // uploadParams: {
+      //   multiple: true, // 是否多选
+      //   fileTypes: ".jpg,.jpeg,.png,.gif", // 文件类型（空字符串表示不限）
+      //   uploadUrl: "https://www.xxx.com:8080", // 真实上传接口地址
+      //   webkitdirectory: false, // 是否上传文件夹
+      //   sliceSize: 0, // 切片大小（0 表示不切片）
+      //   md5: false, // 是否计算 MD5
+      //   maxFileSize: 100 * 1024 * 1024, // 单个文件大小上限（0 表示不限）
+      //   maxFileCount: 4, // 最多可选文件数（0 表示不限）
+      //   simulate: true, // 是否模拟上传（true 预览动画，false 走真实接口）
+      //   mockError: false, // 模拟接口是否返回错误（true 演示报错弹窗）
+      // },
     };
   },
 };

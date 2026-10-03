@@ -6,10 +6,13 @@
  *   1. 在 src/views/ 新建 Xxx.vue
  *   2. 在下面 routes 数组里加一条，懒加载写法：component: () => import('@/views/Xxx.vue')
  *   3. 需要登录才能访问的路由，meta 里加 requireAuth: true
+ *
+ * 登录态：统一走 @/utils/auth.js，不要在组件里直接读 localStorage
  * ============================================================
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import auth from '@/utils/auth'
 
 Vue.use(VueRouter)
 
@@ -25,7 +28,7 @@ const routes = [
     path: '/cart',
     name: 'Cart',
     component: () => import('@/views/Cart.vue'),
-    // requireAuth: true —— 访问前会检查 localStorage 里的 token
+    // requireAuth: true —— 访问前会检查登录态（见 @/utils/auth.js）
     meta: { title: '购物袋 - Apple', requireAuth: true }
   },
   {
@@ -54,14 +57,19 @@ router.beforeEach((to, from, next) => {
   // 1. 动态设置浏览器标签标题
   if (to.meta.title) document.title = to.meta.title
 
-  // 2. 登录鉴权：requireAuth 的页面必须有 token
-  //    TODO-AUTH 改成你项目实际的登录态读取方式（Vuex / Pinia / Cookie）
-  const token = localStorage.getItem('token')
-  if (to.meta.requireAuth && !token) {
+  // 2. 登录鉴权：requireAuth 的路由必须已登录
+  if (to.meta.requireAuth && !auth.isLoggedIn()) {
     // 未登录 -> 跳登录页，把目标地址带过去，登录成功后跳回
     next({ name: 'Login', query: { redirect: to.fullPath } })
     return
   }
+
+  // 3. 已登录用户访问登录页 -> 直接跳首页（后续可按业务调整）
+  if (to.name === 'Login' && auth.isLoggedIn()) {
+    next({ path: '/' })
+    return
+  }
+
   next()
 })
 

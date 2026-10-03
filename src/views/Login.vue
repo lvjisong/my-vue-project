@@ -7,11 +7,23 @@
 </template>
 
 <script>
+import auth from '@/utils/auth'
 export default {
   name: 'Login',
   methods: {
     fakeLogin() {
-      localStorage.setItem('token', 'demo-token-' + Date.now())
+      // TODO-AUTH-LOGIN: 接后端前现在这样：假 token，写个随机数
+      auth.setToken('demo-token-' + Date.now()) 
+      // TODO-AUTH-LOGIN: 接后端后把下面1、2注释打开,把上面的代码注释掉：
+      // 1. 调后端登录接口
+      // const { data } = await post('/auth/login', {
+      //   username: this.form.username,
+      //   password: this.form.password
+      // })
+      // 2. 把后端返回的 token 存起来
+      //   auth.setToken(data.token, data.user)
+      //   auth.setRefreshToken(data.refresh_token)      
+      // 3. 跳回原页面
       const redirect = this.$route.query.redirect || '/'
       this.$router.replace(redirect)
     }

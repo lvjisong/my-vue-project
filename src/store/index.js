@@ -1,0 +1,79 @@
+/**
+ * ============================================================
+ * store/index.js —— Vuex 全局状态
+ * ------------------------------------------------------------
+ * 当前只有 auth 模块（user/token）。后续加购物车、主题等再拆 modules。
+ * ============================================================
+ */
+import Vue from "vue";
+import Vuex from "vuex";
+import axios from "axios";
+
+Vue.use(Vuex);
+
+export default new Vuex.Store({
+  state: {
+    /** 当前登录用户，未登录为 null */
+    user: null,
+    /** token（一般由后端通过 Cookie 下发，这里仅做内存缓存，避免每次读 Cookie） */
+    token: "",
+  },
+
+  mutations: {
+    SET_USER(state, user) {
+      state.user = user;
+    },
+    SET_TOKEN(state, token) {
+      state.token = token;
+    },
+    RESET_AUTH(state) {
+      state.user = null;
+      state.token = "";
+    },
+  },
+
+  actions: {
+    /**
+     * 拉取当前登录用户信息
+     *
+     * TODO-AUTH-FETCHUSER: 【接后端前】现在这样：
+     *   async fetchUser({ commit }) {
+     *     console.log('fetchUser action called, but no backend API is connected.')
+     *   },
+     *
+     * TODO-AUTH-FETCHUSER: 【接后端后】替换为：
+     *   async fetchUser({ commit }) {
+     *     try {
+     *       const { data } = await axios.get('/api/user/me')
+     *       commit('SET_USER', data)
+     *     } catch (e) {
+     *       commit('RESET_AUTH')
+     *       throw e
+     *     }
+     *   },
+     */
+    async fetchUser({ commit }) {
+      console.log("fetchUser action called, but no backend API is connected.");
+    },
+
+    /**
+     * 退出登录
+     *
+     * TODO-AUTH-LOGOUT: 【接后端前】现在这样：
+     *   async logout({ commit }) { commit('RESET_AUTH') },
+     *
+     * TODO-AUTH-LOGOUT: 【接后端后】替换为：
+     *   async logout({ commit }) {
+     *     try { await axios.post('/api/logout') }
+     *     finally { commit('RESET_AUTH') }
+     *   },
+     */
+    async logout({ commit }) {
+      commit("RESET_AUTH");
+    },
+  },
+
+  getters: {
+    isLoggedIn: (state) => !!state.user || !!state.token,
+  },
+});
